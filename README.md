@@ -2,7 +2,7 @@
 
 Interactive study guide for the Adam optimizer paper (Kingma & Ba, 2015) built for MATH 3850 — Numerical Optimization at the University of Lethbridge.
 
-**[View the study guide](https://gbasran.github.io/adam-study-guide/)**
+**[View the study guide](https://gbasran.github.io/ADAM-Machine-Learning-Deepdive/)**
 
 ## What's inside
 
