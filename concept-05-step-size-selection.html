@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page 05: Step Size Selection &mdash; From Line Search to Adaptive Methods</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; line-height: 1.7; padding: 40px 20px; }
+  .container { max-width: 860px; margin: 0 auto; }
+  h1 { color: #64ffda; font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: #888; font-size: 15px; margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 16px; }
+  h2 { color: #bb86fc; font-size: 22px; margin: 48px 0 16px 0; }
+  .tag { display: inline-block; background: #bb86fc; color: #1a1a2e; padding: 3px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+  .analogy { background: #16213e; border-left: 4px solid #64ffda; padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+  .formula-box { background: #0f3460; border: 2px solid #bb86fc; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .note { background: #2d1b4e; border-left: 4px solid #bb86fc; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 16px; }
+  .why-box { background: #0a2e1a; border: 2px solid #64ffda; border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+  .why-box h3 { color: #64ffda; margin-bottom: 8px; font-size: 18px; }
+  .hand-calc { background: #1e1e3a; border: 2px solid #ffd93d; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .hand-calc h3 { color: #ffd93d; margin-bottom: 12px; font-size: 18px; }
+  .hand-calc .step { margin: 12px 0; padding-left: 16px; border-left: 2px solid #444; }
+  .hand-calc .step-label { color: #bb86fc; font-weight: bold; font-size: 16px; }
+  .hand-calc .result { color: #64ffda; font-weight: bold; }
+  .hand-calc .check { color: #ffd93d; font-style: italic; margin-top: 8px; }
+  .plot-container { margin: 30px 0; text-align: center; }
+  .plot-container img { width: 100%; max-width: 860px; border-radius: 8px; border: 1px solid #333; }
+  .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; }
+  .comparison-table th { background: #0f3460; color: #ffd93d; padding: 12px 14px; text-align: left; border-bottom: 2px solid #bb86fc; }
+  .comparison-table td { padding: 10px 14px; border-bottom: 1px solid #333; }
+  .comparison-table tr:nth-child(even) { background: #16213e; }
+  .bridge-box { background: #1e1e3a; border: 2px solid #bb86fc; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .bridge-box h3 { color: #bb86fc; margin-bottom: 12px; font-size: 18px; }
+  .glossary { background: #16213e; border-radius: 12px; padding: 20px 24px; margin: 30px 0; }
+  .glossary h3 { color: #ffd93d; margin-bottom: 12px; }
+  .glossary dl { font-size: 15px; }
+  .glossary dt { color: #64ffda; font-weight: bold; margin-top: 10px; }
+  .glossary dd { margin-left: 20px; color: #ccc; }
+  .nav { margin-top: 40px; padding: 20px; background: #0f3460; border-radius: 12px; text-align: center; }
+  .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
+  .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Page 05: Step Size Selection</h1>
+<p class="subtitle">MATH 3850 &mdash; From line search to adaptive methods: the direct bridge to Adam</p>
+
+<!-- ===================== PART A: EXACT LINE SEARCH ===================== -->
+<span class="tag">PART A</span>
+<h2>Exact Line Search: Find the Best $\alpha$ by Calculus</h2>
+
+<div class="analogy">
+  <p><strong>Analogy: You know which way is downhill. Now how far should you walk?</strong></p>
+  <p style="margin-top: 8px;">Exact line search says: "minimize $f$ along the downhill direction. Find the $\alpha$ that makes $f$ as small as possible along that line." It's like looking down a hallway and walking to the exact lowest point of the floor.</p>
+</div>
+
+<div class="formula-box" style="text-align: left;">
+  <p style="font-size: 18px; margin-bottom: 12px;">For a quadratic $f(x) = \frac{1}{2}x^TQx$:</p>
+  <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$\alpha_k = \frac{g_k^T g_k}{g_k^T Q g_k}$$</p>
+  <p style="font-size: 16px;">This gives the <strong>exact</strong> step size that minimizes $f$ along the gradient direction.</p>
+  <p style="font-size: 16px; margin-top: 12px; color: #ffd93d;"><strong>Why this formula?</strong> Set $\frac{d}{d\alpha}f(x_k - \alpha g_k) = 0$ and solve for $\alpha$. The numerator ($g^Tg$) is the gradient magnitude. The denominator ($g^TQg$) accounts for curvature in that direction.</p>
+</div>
+
+<div class="hand-calc">
+  <h3>Hand Computation: Exact Line Search (from A1/A2)</h3>
+  <p>$Q = \begin{bmatrix}2&0\\0&3\end{bmatrix}$, $x_0 = [1, 1]^T$, so $g_0 = Qx_0 = [2, 3]^T$</p>
+
+  <div class="step">
+    <p class="step-label">Numerator: $g_0^T g_0$</p>
+    <p>$[2, 3] \cdot [2, 3] = 4 + 9 = $ <span class="result">$13$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Denominator: $g_0^T Q g_0$</p>
+    <p>First: $Qg_0 = \begin{bmatrix}2&0\\0&3\end{bmatrix}\begin{bmatrix}2\\3\end{bmatrix} = \begin{bmatrix}4\\9\end{bmatrix}$</p>
+    <p>Then: $g_0^T (Qg_0) = [2, 3] \cdot [4, 9] = 8 + 27 = $ <span class="result">$35$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Result:</p>
+    <p class="result">$\alpha_0 = 13/35 \approx 0.371$</p>
+    <p style="color:#888; font-size:15px;">This is the optimal step size for this particular gradient and curvature. Not 0.1 or 0.01 &mdash; the exact best value.</p>
+  </div>
+
+  <p class="check">You computed this exact calculation in A2 and Quiz 6. The line search gives a different $\alpha$ each iteration based on the current gradient and curvature.</p>
+</div>
+
+<!-- ===================== PART B: ARMIJO BACKTRACKING ===================== -->
+<span class="tag">PART B</span>
+<h2>Armijo Backtracking: "Start Big, Shrink Until It Works"</h2>
+
+<div class="analogy">
+  <p><strong>Analogy: Trying shoes on.</strong> Start with the biggest size. If it's too big (doesn't satisfy the condition), try the next size down. Keep going until you find one that fits.</p>
+</div>
+
+<div class="formula-box" style="text-align: left;">
+  <p style="font-size: 18px; margin-bottom: 12px;">Armijo sufficient decrease condition:</p>
+  <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$f(x_k + \alpha p_k) \leq f(x_k) + c \cdot \alpha \cdot g_k^T p_k$$</p>
+  <p style="font-size: 16px; margin-top: 12px;">In English: "the actual decrease must be at least $c$ fraction of the predicted decrease."</p>
+  <p style="font-size: 16px; margin-top: 12px;">Algorithm (from A1):</p>
+  <ol style="margin: 8px 0 0 20px; font-size: 16px;">
+    <li>Start with $\alpha = 1$</li>
+    <li>Check the Armijo condition</li>
+    <li>If it fails: $\alpha \leftarrow \eta \cdot \alpha$ (shrink by factor $\eta = 0.8$)</li>
+    <li>Repeat until condition passes</li>
+  </ol>
+  <p style="font-size: 15px; color: #888; margin-top: 12px;">Your A1 used $c = 10^{-3}$, $\eta = 0.8$.</p>
+</div>
+
+<div class="hand-calc">
+  <h3>Hand Computation: One Armijo Backtrack</h3>
+  <p>$f(x) = x^2$, $x_k = 5$, $g_k = 10$, $p_k = -10$ (steepest descent direction)</p>
+
+  <div class="step">
+    <p class="step-label">Try $\alpha = 1$:</p>
+    <p>$f(5 + 1 \cdot (-10)) = f(-5) = 25$</p>
+    <p>Check: $25 \leq f(5) + 0.001 \cdot 1 \cdot (10)(-10) = 25 + 0.001(-100) = 25 - 0.1 = 24.9$</p>
+    <p>$25 \leq 24.9$? <span style="color:#ff6b6b; font-weight:bold;">NO</span> &mdash; we overshot! (Landed at same height on the other side)</p>
+  </div>
+  <div class="step">
+    <p class="step-label">Shrink: $\alpha = 0.8 \cdot 1 = 0.8$</p>
+    <p>$f(5 + 0.8(-10)) = f(-3) = 9$</p>
+    <p>Check: $9 \leq 25 + 0.001 \cdot 0.8 \cdot (-100) = 25 - 0.08 = 24.92$</p>
+    <p>$9 \leq 24.92$? <span style="color:#64ffda; font-weight:bold;">YES</span></p>
+    <p class="result">Accept $\alpha = 0.8$</p>
+  </div>
+
+  <p class="check">The Armijo condition is a safety check: "did the function actually decrease enough?" It prevents the overshooting problem from Page 03.</p>
+</div>
+
+<!-- ===================== PART C: THE PROBLEM WITH ALL OF THIS ===================== -->
+<span class="tag">PART C</span>
+<h2>The Problem: Still One $\alpha$ for Everything</h2>
+
+<div class="why-box">
+  <h3>Even with line search, we're stuck</h3>
+  <p>Both exact line search and Armijo find <strong>one scalar $\alpha$</strong> per iteration. Every parameter gets the same step size.</p>
+  <p style="margin-top: 12px;">But remember the bathtub from Page 03? Parameter $x$ needs a big step and parameter $y$ needs a tiny step. One $\alpha$ can't serve both.</p>
+</div>
+
+<table class="comparison-table">
+  <thead>
+    <tr><th>Method</th><th>How $\alpha$ is chosen</th><th># of step sizes</th><th>Problem</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Fixed GD</td>
+      <td>You pick a constant</td>
+      <td>1 (same forever)</td>
+      <td>Too big or too small?</td>
+    </tr>
+    <tr>
+      <td>Exact line search</td>
+      <td>Calculus formula</td>
+      <td>1 per iteration</td>
+      <td>Same for all params; needs $Q$</td>
+    </tr>
+    <tr>
+      <td>Armijo backtracking</td>
+      <td>Trial and error</td>
+      <td>1 per iteration</td>
+      <td>Same for all params; extra evaluations</td>
+    </tr>
+    <tr style="background: #0a2e1a;">
+      <td style="color:#64ffda; font-weight:bold;">Adam</td>
+      <td style="color:#64ffda;">Automatic from gradient history</td>
+      <td style="color:#64ffda; font-weight:bold;">1 per PARAMETER</td>
+      <td style="color:#64ffda;">None of the above!</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===================== PART D: BRIDGE TO ADAM ===================== -->
+<span class="tag">PART D</span>
+<h2>The Adaptive Idea: Each Parameter Gets Its Own Step Size</h2>
+
+<div class="analogy">
+  <p><strong>Analogy: Instead of one thermostat for the whole building, each room gets its own thermostat.</strong> The server room needs to be cold. The lobby needs to be warm. One setting can't work for both &mdash; you need per-room control.</p>
+  <p style="margin-top: 8px;">Adam gives each parameter its own "thermostat" (step size), automatically adjusted based on how that parameter's gradient has been behaving.</p>
+</div>
+
+<div class="bridge-box">
+  <h3>The Bridge: How Adam Replaces Line Search</h3>
+  <p style="font-size: 16px;">In your course, you learned three ways to pick step sizes: fixed, exact line search, Armijo backtracking. All give ONE $\alpha$ for all parameters.</p>
+  <p style="margin-top: 12px; font-size: 16px;">Adam does something different:</p>
+  <ul style="margin: 8px 0 0 20px; font-size: 16px;">
+    <li><strong>For each parameter $\theta_i$:</strong> track how big its gradient has been (using $v_t$, the second moment)</li>
+    <li><strong>If gradient is consistently large</strong> &rarr; $v_t$ is large &rarr; $\sqrt{v_t}$ is large &rarr; divide by it &rarr; <strong>smaller step</strong> (tame the big gradient)</li>
+    <li><strong>If gradient is consistently small</strong> &rarr; $v_t$ is small &rarr; $\sqrt{v_t}$ is small &rarr; divide by it &rarr; <strong>bigger step</strong> (boost the weak gradient)</li>
+  </ul>
+  <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;"><strong>The effective step size for parameter $i$:</strong></p>
+  <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$\alpha_i^{\text{effective}} = \frac{\alpha}{\sqrt{\hat{v}_{t,i}} + \epsilon}$$</p>
+  <p style="font-size: 16px;">Each parameter $i$ gets its own denominator $\sqrt{\hat{v}_{t,i}}$, so each gets its own effective step size. No line search needed. No matrix storage needed. Just two running averages.</p>
+</div>
+
+<div class="note">
+  <strong>Summary of the journey so far:</strong><br>
+  Pages 00-02: Foundations (derivatives, gradients, convexity)<br>
+  Pages 03-04: GD is slow, Newton/BFGS use curvature to go faster but are expensive<br>
+  Page 05 (here): Even line search gives only one $\alpha$ for all params &mdash; Adam solves this<br><br>
+  <strong>Next up (Pages 06-08):</strong> The ML setting &mdash; stochastic gradients, what we're actually optimizing, and the two problems Adam solves. Then Pages 09-12: Adam itself.
+</div>
+
+<!-- ===================== GLOSSARY ===================== -->
+<div class="glossary">
+  <h3>Glossary &mdash; Step Size Selection</h3>
+  <dl>
+    <dt>Exact line search</dt>
+    <dd>Find the optimal $\alpha$ by calculus. Formula: $\alpha = g^Tg / g^TQg$ for quadratics.</dd>
+
+    <dt>Armijo condition</dt>
+    <dd>A safety check: "did the function decrease enough?" $f(x + \alpha p) \leq f(x) + c \cdot \alpha \cdot g^Tp$. Prevents overshooting.</dd>
+
+    <dt>Backtracking</dt>
+    <dd>Start with $\alpha = 1$, shrink by factor $\eta$ until Armijo passes. Parameters from A1: $\eta = 0.8$, $c = 10^{-3}$.</dd>
+
+    <dt>Adaptive step size</dt>
+    <dd>Each parameter gets its own step size, automatically adjusted. Adam does this using the second moment $v_t$.</dd>
+
+    <dt>Effective step size ($\alpha / \sqrt{\hat{v}_t}$)</dt>
+    <dd>Adam's per-parameter step size. Large past gradients &rarr; large $v_t$ &rarr; small step. Small past gradients &rarr; small $v_t$ &rarr; big step.</dd>
+  </dl>
+</div>
+
+<a href="concept-06-sgd.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
+  <p>Next: Page 06 &mdash; Stochastic Gradient Descent</p>
+  <p>What changes when you can only see a random sample of the data?</p>
+</div></a>
+
+</div>
+</body>
+</html>

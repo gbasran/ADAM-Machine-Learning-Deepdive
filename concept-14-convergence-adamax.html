@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page 14: Convergence Theory, AdaMax, and the Big Picture</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; line-height: 1.7; padding: 40px 20px; }
+  .container { max-width: 860px; margin: 0 auto; }
+  h1 { color: #64ffda; font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: #888; font-size: 15px; margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 16px; }
+  h2 { color: #bb86fc; font-size: 22px; margin: 48px 0 16px 0; }
+  .tag { display: inline-block; background: #bb86fc; color: #1a1a2e; padding: 3px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+  .analogy { background: #16213e; border-left: 4px solid #64ffda; padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+  .formula-box { background: #0f3460; border: 2px solid #bb86fc; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .note { background: #2d1b4e; border-left: 4px solid #bb86fc; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 16px; }
+  .why-box { background: #0a2e1a; border: 2px solid #64ffda; border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+  .why-box h3 { color: #64ffda; margin-bottom: 8px; font-size: 18px; }
+  .hand-calc { background: #1e1e3a; border: 2px solid #ffd93d; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .hand-calc h3 { color: #ffd93d; margin-bottom: 12px; font-size: 18px; }
+  .hand-calc .step { margin: 12px 0; padding-left: 16px; border-left: 2px solid #444; }
+  .hand-calc .step-label { color: #bb86fc; font-weight: bold; font-size: 16px; }
+  .hand-calc .result { color: #64ffda; font-weight: bold; }
+  .glossary { background: #16213e; border-radius: 12px; padding: 20px 24px; margin: 30px 0; }
+  .glossary h3 { color: #ffd93d; margin-bottom: 12px; }
+  .glossary dl { font-size: 15px; }
+  .glossary dt { color: #64ffda; font-weight: bold; margin-top: 10px; }
+  .glossary dd { margin-left: 20px; color: #ccc; }
+  .timeline { margin: 30px 0; }
+  .timeline-item { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid #333; }
+  .timeline-year { color: #ffd93d; font-weight: bold; font-size: 16px; text-align: right; }
+  .timeline-desc { font-size: 16px; }
+  .timeline-desc strong { color: #64ffda; }
+  .final-box { background: linear-gradient(135deg, #0f3460, #0a2e1a); border: 3px solid #ffd93d; border-radius: 16px; padding: 32px; margin: 40px 0; text-align: center; }
+  .final-box h2 { color: #ffd93d; margin-bottom: 20px; font-size: 24px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Page 14: Convergence, AdaMax, and the Big Picture</h1>
+<p class="subtitle">MATH 3850 &mdash; Adam Paper, Sections 4 &amp; 7 &mdash; What theory guarantees, the infinity-norm variant, and where Adam fits in optimization</p>
+
+<!-- ===================== PART A: REGRET ===================== -->
+<span class="tag">PART A</span>
+<h2>Convergence Theory: The Regret Framework</h2>
+
+<div class="analogy">
+  <p><strong>Analogy: A poker player's regret.</strong></p>
+  <p>Imagine you play poker 1,000 hands. After seeing all the results, you compute: "if I had played the single best fixed strategy for ALL hands, how much more would I have won?" That gap is your <strong>regret</strong>.</p>
+  <p style="margin-top: 8px;">If your regret grows slowly (sublinearly) &mdash; say it doubles when the number of hands quadruples &mdash; then your <em>average</em> regret per hand goes to zero. You're approaching the best fixed strategy without knowing it in advance.</p>
+</div>
+
+<div class="formula-box" style="text-align: left;">
+  <p style="font-size: 18px; margin-bottom: 12px;"><strong>Regret</strong> (paper's Definition, Section 4):</p>
+  <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$R(T) = \sum_{t=1}^{T} [f_t(\theta_t) - f_t(\theta^*)]$$</p>
+  <p style="font-size: 16px;">Breaking this down:</p>
+  <ul style="margin: 8px 0 0 20px; font-size: 16px;">
+    <li>$f_t(\theta_t)$ = the loss Adam achieved at step $t$ with its chosen $\theta_t$</li>
+    <li>$f_t(\theta^*)$ = the loss the <strong>best possible fixed</strong> $\theta^*$ would have achieved</li>
+    <li>$R(T)$ = total accumulated gap over $T$ steps</li>
+  </ul>
+  <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;">If $R(T)$ grows slowly, Adam is doing well — it's not falling far behind the optimal choice.</p>
+</div>
+
+<div class="why-box">
+  <h3>What does the paper prove? (Theorem 4.1 and Corollary 4.2)</h3>
+  <p style="font-size: 16px;">Under certain assumptions (bounded gradients, convex losses):</p>
+  <p style="text-align: center; font-size: 22px; margin: 16px 0; color: #64ffda;">$$\frac{R(T)}{T} = O\!\left(\frac{1}{\sqrt{T}}\right)$$</p>
+  <p style="font-size: 16px;">In plain English: <strong>the average regret per step goes to zero</strong> as you take more steps. After 10,000 steps, your average loss is within $1/\sqrt{10000} = 1/100$ of optimal. After a million steps: within $1/1000$ of optimal.</p>
+  <p style="margin-top: 12px; font-size: 16px;">This matches the <strong>best known rate</strong> for any online convex optimization method. Adam isn't just good in practice — it has provably competitive convergence.</p>
+</div>
+
+<div class="hand-calc">
+  <h3>What Does $O(1/\sqrt{T})$ Mean Concretely?</h3>
+  <div class="step">
+    <p class="step-label">After $T = 100$ steps:</p>
+    <p>Average regret $\leq C / \sqrt{100} = C / 10$</p>
+  </div>
+  <div class="step">
+    <p class="step-label">After $T = 10{,}000$ steps:</p>
+    <p>Average regret $\leq C / \sqrt{10000} = C / 100$</p>
+    <p style="color:#888; font-size:15px;">100x more steps, but only 10x better. Square root growth is slow — that's good for us.</p>
+  </div>
+  <div class="step">
+    <p class="step-label">After $T = 1{,}000{,}000$ steps:</p>
+    <p>Average regret $\leq C / 1000$ &mdash; practically zero.</p>
+  </div>
+  <p style="color: #ffd93d; font-style: italic; margin-top: 12px;">Connection to your course: this is like convergence rate analysis from Page 03, but for the online/stochastic setting. Instead of "distance to minimum shrinks," it's "average regret shrinks." Same spirit, different framework.</p>
+</div>
+
+<div class="note">
+  <strong>The assumptions are important:</strong> Theorem 4.1 assumes convex loss functions and bounded gradients. Neural networks violate both (non-convex, potentially unbounded gradients). So the theory doesn't formally apply to most practical uses of Adam. But Adam still works great empirically (Page 13). This theory-practice gap is normal and widely accepted in ML.
+</div>
+
+<!-- ===================== PART B: ADAMAX ===================== -->
+<span class="tag">PART B</span>
+<h2>AdaMax: The Infinity-Norm Variant (Section 7.1)</h2>
+
+<div class="analogy">
+  <p><strong>Analogy:</strong> Adam uses the <em>average</em> of squared gradients ($v_t$) to scale steps. AdaMax uses the <em>maximum</em> instead. It's like grading on the hardest test rather than the average test.</p>
+</div>
+
+<div class="formula-box" style="text-align: left;">
+  <p style="font-size: 18px; margin-bottom: 12px;">Adam's second moment (L2 norm):</p>
+  <p style="margin: 8px 0;">$v_t = \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g_t^2$ &nbsp; (average of squares)</p>
+
+  <p style="font-size: 18px; margin: 20px 0 12px 0;">AdaMax's second moment (L&infin; norm):</p>
+  <p style="margin: 8px 0;">$u_t = \max(\beta_2 \cdot u_{t-1},\; |g_t|)$ &nbsp; (maximum of absolutes)</p>
+
+  <p style="margin-top: 20px; font-size: 16px;">The update becomes:</p>
+  <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$\theta_t = \theta_{t-1} - \frac{\alpha}{1 - \beta_1^t} \cdot \frac{m_t}{u_t}$$</p>
+</div>
+
+<div class="why-box">
+  <h3>Why does AdaMax exist?</h3>
+  <p>Two nice properties:</p>
+  <ol style="margin: 8px 0 0 20px; font-size: 16px;">
+    <li><strong>No bias correction needed for $u_t$.</strong> The max operation doesn't suffer from the zero-initialization bias that the average does. One less thing to worry about.</li>
+    <li><strong>Simpler step bound:</strong> $|\Delta_t| \leq \alpha$, always. Clean guarantee.</li>
+  </ol>
+  <p style="margin-top: 12px; font-size: 16px;">In practice, Adam and AdaMax perform similarly. The paper presents AdaMax as an interesting theoretical variant. Default recommendation is still Adam.</p>
+</div>
+
+<div class="hand-calc">
+  <h3>Hand Computation: AdaMax vs Adam ($u_t$ vs $v_t$)</h3>
+  <p>Gradients: $g_1 = 5$, $g_2 = -3$, $g_3 = 8$. $\beta_2 = 0.999$.</p>
+
+  <div class="step">
+    <p class="step-label">Adam ($v_t$, average of squares):</p>
+    <p>$v_1 = 0.001 \times 25 = 0.025$</p>
+    <p>$v_2 = 0.999(0.025) + 0.001(9) = 0.034$</p>
+    <p>$v_3 = 0.999(0.034) + 0.001(64) = 0.098$</p>
+    <p class="result">$v_3 = 0.098$ (running average of $[25, 9, 64]$)</p>
+  </div>
+  <div class="step">
+    <p class="step-label">AdaMax ($u_t$, running max):</p>
+    <p>$u_1 = \max(0, |5|) = 5$</p>
+    <p>$u_2 = \max(0.999 \times 5, |-3|) = \max(4.995, 3) = 4.995$</p>
+    <p>$u_3 = \max(0.999 \times 4.995, |8|) = \max(4.990, 8) = 8$</p>
+    <p class="result">$u_3 = 8$ (largest gradient magnitude seen)</p>
+  </div>
+  <p style="color: #888; font-style: italic; margin-top: 8px;">AdaMax is dominated by the biggest gradient ever seen. Adam averages them. Both serve the same purpose: scaling step sizes based on gradient magnitude.</p>
+</div>
+
+<!-- ===================== PART C: BIG PICTURE ===================== -->
+<span class="tag">PART C</span>
+<h2>The Big Picture: Where Adam Fits in Optimization History</h2>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <span class="timeline-year">1847</span>
+    <div class="timeline-desc"><strong>Gradient Descent</strong> (Cauchy) — Walk downhill with fixed step size. Simple but slow. One $\alpha$ for everything.</div>
+  </div>
+  <div class="timeline-item">
+    <span class="timeline-year">1687/1970s</span>
+    <div class="timeline-desc"><strong>Newton's Method</strong> — Use curvature (Hessian) for perfect steps. Quadratic convergence but expensive ($n^2$ storage).</div>
+  </div>
+  <div class="timeline-item">
+    <span class="timeline-year">1970</span>
+    <div class="timeline-desc"><strong>BFGS</strong> (Broyden, Fletcher, Goldfarb, Shanno) — Approximate Newton cheaply using gradient history. Superlinear convergence. Still $n^2$ storage.</div>
+  </div>
+  <div class="timeline-item">
+    <span class="timeline-year">1951/1986</span>
+    <div class="timeline-desc"><strong>SGD + Momentum</strong> (Robbins-Monro, Rumelhart) — Use random minibatches for speed. Add momentum to smooth noise. But still one $\alpha$ for all.</div>
+  </div>
+  <div class="timeline-item">
+    <span class="timeline-year">2011</span>
+    <div class="timeline-desc"><strong>AdaGrad</strong> (Duchi et al.) — Per-parameter adaptive rates! Great for sparse features. But step size shrinks to zero over time (accumulates forever).</div>
+  </div>
+  <div class="timeline-item">
+    <span class="timeline-year">2012</span>
+    <div class="timeline-desc"><strong>RMSProp</strong> (Hinton) — Fix AdaGrad's shrinking by using a decaying average instead of total accumulation. But no momentum and no bias correction.</div>
+  </div>
+  <div class="timeline-item" style="background: #0a2e1a; border-radius: 8px; padding: 16px;">
+    <span class="timeline-year" style="font-size: 20px;">2015</span>
+    <div class="timeline-desc"><strong style="color: #ffd93d; font-size: 20px;">Adam</strong> (Kingma &amp; Ba) — Combines everything: <strong>momentum</strong> (smooths noise) + <strong>adaptive rates</strong> (per-parameter scaling, decaying average) + <strong>bias correction</strong> (fixes initialization). $O(n)$ storage. Works out of the box.</div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>Adam is the synthesis.</strong> It takes the best ideas from decades of optimization research and combines them into one clean, efficient, practical algorithm. That's why it became the default optimizer in ML frameworks like PyTorch and TensorFlow.
+</div>
+
+<!-- ===================== FINAL SUMMARY ===================== -->
+<div class="final-box">
+  <h2>The Entire Paper in One Page</h2>
+  <div style="text-align: left; max-width: 700px; margin: 0 auto;">
+    <p style="margin-bottom: 16px;"><strong style="color:#ff6b6b;">The problem:</strong> SGD is fast but noisy (zigzags) and uses one step size for all parameters (bathtub problem).</p>
+    <p style="margin-bottom: 16px;"><strong style="color:#bb86fc;">Solution 1 — Momentum ($m_t$):</strong> Average past gradients to smooth out noise. $m_t = \beta_1 m_{t-1} + (1-\beta_1)g_t$</p>
+    <p style="margin-bottom: 16px;"><strong style="color:#ff6b6b;">Solution 2 — Adaptive rates ($v_t$):</strong> Track squared gradient magnitudes per parameter. Divide by $\sqrt{v_t}$ to give each parameter its own step size. $v_t = \beta_2 v_{t-1} + (1-\beta_2)g_t^2$</p>
+    <p style="margin-bottom: 16px;"><strong style="color:#ffd93d;">Fix — Bias correction:</strong> Both $m_t$ and $v_t$ start at 0, making early estimates too low. Divide by $(1-\beta^t)$ to fix.</p>
+    <p style="margin-bottom: 16px;"><strong style="color:#64ffda;">The update:</strong> $\theta_t = \theta_{t-1} - \alpha \cdot \hat{m}_t / (\sqrt{\hat{v}_t} + \epsilon)$</p>
+    <p style="margin-bottom: 16px;"><strong style="color:#64ffda;">Theory:</strong> Average regret $O(1/\sqrt{T})$ — matches the best possible rate for online convex optimization.</p>
+    <p><strong style="color:#64ffda;">Practice:</strong> Works on convex AND non-convex problems. Default settings ($\alpha = 0.001$, $\beta_1 = 0.9$, $\beta_2 = 0.999$) rarely need tuning. Became the standard optimizer in deep learning.</p>
+  </div>
+</div>
+
+<!-- ===================== GLOSSARY ===================== -->
+<div class="glossary">
+  <h3>Glossary &mdash; Convergence and AdaMax</h3>
+  <dl>
+    <dt>Regret $R(T)$</dt>
+    <dd>Total accumulated gap between Adam's choices and the best fixed choice in hindsight. Lower regret = closer to optimal.</dd>
+
+    <dt>$O(1/\sqrt{T})$ average regret</dt>
+    <dd>Average regret per step shrinks like $1/\sqrt{T}$. After $T$ steps, you're within $C/\sqrt{T}$ of optimal on average. Goes to zero.</dd>
+
+    <dt>Online convex optimization</dt>
+    <dd>The theoretical framework used to analyze Adam. At each step, nature reveals a new convex loss function, and you choose parameters before seeing it.</dd>
+
+    <dt>AdaMax</dt>
+    <dd>Adam variant using max (L&infin; norm) instead of average (L2 norm) for the second moment. Simpler bound, no bias correction needed for $u_t$.</dd>
+
+    <dt>$u_t = \max(\beta_2 \cdot u_{t-1}, |g_t|)$</dt>
+    <dd>AdaMax's second moment: the exponentially-decaying max of gradient magnitudes.</dd>
+  </dl>
+</div>
+
+<a href="index.html" style="text-decoration:none;"><div style="margin-top: 40px; padding: 24px; background: linear-gradient(135deg, #0f3460, #16213e); border: 2px solid #64ffda; border-radius: 12px; text-align: center; cursor:pointer;">
+  <p style="color: #64ffda; font-size: 22px; font-weight: bold;">Study Guide Complete!</p>
+  <p style="color: #ccc; font-size: 16px; margin-top: 8px;">15 pages covering everything from basic derivatives to the full Adam algorithm.</p>
+  <p style="color: #ffd93d; font-size: 16px; margin-top: 8px;">Go to the Index page for a linked overview of all pages.</p>
+</div></a>
+
+</div>
+</body>
+</html>

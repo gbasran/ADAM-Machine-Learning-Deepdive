@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATH 3850 &mdash; Adam Optimizer Study Guide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; line-height: 1.7; padding: 40px 20px; }
+  .container { max-width: 860px; margin: 0 auto; }
+  h1 { color: #64ffda; font-size: 32px; margin-bottom: 8px; text-align: center; }
+  .subtitle { color: #888; font-size: 16px; margin-bottom: 40px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 16px; }
+  .module { margin: 40px 0; }
+  .module-header { color: #bb86fc; font-size: 20px; font-weight: bold; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #bb86fc; }
+  .page-link {
+    display: block; text-decoration: none; color: #e0e0e0;
+    background: #0f3460; border-radius: 12px; padding: 16px 20px; margin: 10px 0;
+    border-left: 4px solid #64ffda; transition: background 0.2s, transform 0.1s;
+  }
+  .page-link:hover { background: #16213e; transform: translateX(4px); }
+  .page-link .num { color: #64ffda; font-weight: bold; font-size: 16px; }
+  .page-link .title { color: #e0e0e0; font-size: 17px; font-weight: bold; margin-left: 8px; }
+  .page-link .desc { color: #888; font-size: 14px; margin-top: 4px; margin-left: 36px; }
+  .page-link.core { border-left-color: #ffd93d; }
+  .page-link.core .num { color: #ffd93d; }
+  .info-box { background: #16213e; border-radius: 12px; padding: 20px 24px; margin: 30px 0; text-align: center; }
+  .info-box p { font-size: 16px; margin: 8px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>MATH 3850: Adam Optimizer Study Guide</h1>
+<p class="subtitle">15 interactive pages covering foundations through the full paper &mdash; built for the April 2 demo</p>
+
+<div class="info-box">
+  <p><strong>Paper:</strong> Kingma &amp; Ba, "Adam: A Method for Stochastic Optimization" (ICLR 2015)</p>
+  <p><strong>Course:</strong> MATH 3850 &mdash; Numerical Optimization &mdash; University of Lethbridge</p>
+  <p style="color: #ffd93d; margin-top: 12px;">Pages with <span style="border-left: 4px solid #ffd93d; padding-left: 8px;">gold borders</span> are the core Adam pages &mdash; prioritize these for the demo.</p>
+</div>
+
+<div class="module">
+  <div class="module-header">MODULE 1: Math Foundations</div>
+  <a class="page-link" href="concept-00-foundations.html">
+    <span class="num">00</span><span class="title">Derivatives, Partial Derivatives, and Gradients</span>
+    <div class="desc">Speedometer analogy. Partial derivatives = freeze other variables. Gradient = list of slopes. Hand computation referencing A2. Vocabulary translation (x &rarr; &theta;, step size &rarr; learning rate).</div>
+  </a>
+  <a class="page-link" href="concept-01-vectors-norms.html">
+    <span class="num">01</span><span class="title">Vectors, Norms, and Elementwise Operations</span>
+    <div class="desc">L1/L2/L&infin; norms with plots. Elementwise multiply, square, sqrt, divide &mdash; critical for reading Adam's formulas. Preview of where these show up in Adam.</div>
+  </a>
+  <a class="page-link" href="concept-02-convexity.html">
+    <span class="num">02</span><span class="title">Convexity: What Makes Problems "Nice"</span>
+    <div class="desc">Bowl vs bumpy landscape. Second derivative test. 3D plots. Why Adam's theory assumes convex but practice is non-convex.</div>
+  </a>
+</div>
+
+<div class="module">
+  <div class="module-header">MODULE 2: Course Concepts That Connect to Adam</div>
+  <a class="page-link" href="concept-03-gradient-descent-full.html">
+    <span class="num">03</span><span class="title">Gradient Descent: The Full Picture</span>
+    <div class="desc">Step sizes (too big/small/right). Convergence rates. Condition number &kappa; and the bathtub problem. Hand computation referencing A1. The fundamental limitation: one &alpha; for everything.</div>
+  </a>
+  <a class="page-link" href="concept-04-newton-bfgs.html">
+    <span class="num">04</span><span class="title">Newton's Method and BFGS</span>
+    <div class="desc">Hessian = curvature. Newton step = jump to model minimum. BFGS = approximate Newton from gradient history. Hand computation mirroring Quiz 4 and A2. Bridge: BFGS &rarr; Adam.</div>
+  </a>
+  <a class="page-link" href="concept-05-step-size-selection.html">
+    <span class="num">05</span><span class="title">Step Size Selection: Line Search to Adaptive Methods</span>
+    <div class="desc">Exact line search formula. Armijo backtracking. Hand computation. Why even line search gives only ONE &alpha; &mdash; Adam's adaptive rates solve this.</div>
+  </a>
+</div>
+
+<div class="module">
+  <div class="module-header">MODULE 3: Bridge to Machine Learning</div>
+  <a class="page-link" href="concept-06-sgd.html">
+    <span class="num">06</span><span class="title">Stochastic Gradient Descent</span>
+    <div class="desc">Full data vs minibatch. Why stochastic (460x faster). Contour plot comparison. Hand computation showing unbiased estimate. Paper notation ($g_t$, $f_t$).</div>
+  </a>
+  <a class="page-link" href="concept-07-ml-basics.html">
+    <span class="num">07</span><span class="title">Machine Learning Basics: What Are We Optimizing?</span>
+    <div class="desc">Prediction machine analogy. Loss functions. MNIST (60K digit images). Logistic regression = weighted votes. Cross-entropy loss. Tiny hand computation.</div>
+  </a>
+  <a class="page-link" href="concept-08-two-problems.html">
+    <span class="num">08</span><span class="title">The Two Problems Adam Solves</span>
+    <div class="desc">Problem 1: zigzag (noisy gradients). Problem 2: one-size-fits-all step size. SGD vs Adam contour comparison. Dataflow diagram of Adam's structure.</div>
+  </a>
+</div>
+
+<div class="module">
+  <div class="module-header">MODULE 4: The Adam Paper</div>
+  <a class="page-link core" href="concept-09-momentum.html">
+    <span class="num">09</span><span class="title">Momentum (First Moment)</span>
+    <div class="desc">Weather forecast analogy. EMA formula with every symbol explained. Full hand computation (5 steps). Plot: raw noisy gradients vs smoothed EMA. Connection to BFGS.</div>
+  </a>
+  <a class="page-link core" href="concept-10-adaptive-rates.html">
+    <span class="num">10</span><span class="title">Adaptive Learning Rates (Second Moment)</span>
+    <div class="desc">Mixing board analogy. v_t formula. Why squared gradients. Hand computation: two parameters with 50x different effective step sizes. Diagonal preconditioning connection.</div>
+  </a>
+  <a class="page-link core" href="concept-11-bias-correction.html">
+    <span class="num">11</span><span class="title">Bias Correction</span>
+    <div class="desc">New city analogy. Why m_0=0 makes early steps wrong. The (1-&beta;^t) fix. Hand computation showing perfect correction. Plot: biased vs corrected for both moments.</div>
+  </a>
+  <a class="page-link core" href="concept-12-full-adam.html">
+    <span class="num">12</span><span class="title">The Full Adam Algorithm</span>
+    <div class="desc">Color-coded pseudocode. SVG dataflow diagram. 3 complete hand-computed iterations with every intermediate value. Hyperparameter explanations. Trust region property.</div>
+  </a>
+  <a class="page-link core" href="concept-13-experiments.html">
+    <span class="num">13</span><span class="title">The Experiments: Adam vs Everyone</span>
+    <div class="desc">How to read the paper's plots. 4 experiments explained: logistic regression, neural nets, CNNs, bias correction ablation. Key results and what to say in the demo.</div>
+  </a>
+  <a class="page-link" href="concept-14-convergence-adamax.html">
+    <span class="num">14</span><span class="title">Convergence Theory, AdaMax, and the Big Picture</span>
+    <div class="desc">Regret framework (poker analogy). O(1/&radic;T) bound. AdaMax (max instead of average). Timeline: GD &rarr; Newton &rarr; BFGS &rarr; AdaGrad &rarr; RMSProp &rarr; Adam. Full paper summary.</div>
+  </a>
+</div>
+
+<div class="info-box" style="margin-top: 40px;">
+  <p style="color: #64ffda; font-size: 18px; font-weight: bold;">Good luck with the demo!</p>
+  <p style="color: #ccc;">Start with Pages 08 &rarr; 09 &rarr; 10 &rarr; 11 &rarr; 12 for the core Adam content.</p>
+  <p style="color: #ccc;">Use Page 13 for the experiments section of your presentation.</p>
+</div>
+
+</div>
+</body>
+</html>

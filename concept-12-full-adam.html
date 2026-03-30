@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page 12: The Full Adam Algorithm</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; line-height: 1.7; padding: 40px 20px; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: #64ffda; font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: #888; font-size: 15px; margin-bottom: 40px; border-bottom: 1px solid #333; padding-bottom: 16px; }
+  h2 { color: #bb86fc; font-size: 22px; margin: 48px 0 16px 0; }
+  .tag { display: inline-block; background: #bb86fc; color: #1a1a2e; padding: 3px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+  .analogy { background: #16213e; border-left: 4px solid #64ffda; padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+  .algo-line { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; padding: 14px 16px; margin: 4px 0; border-radius: 8px; font-size: 16px; }
+  .algo-line:nth-child(even) { background: #16213e; }
+  .algo-line .num { color: #888; font-size: 14px; min-width: 24px; }
+  .algo-line .formula { font-family: 'Segoe UI', sans-serif; }
+  .algo-line .explain { color: #888; font-size: 14px; text-align: right; }
+  .algo-section { border-left: 4px solid; padding-left: 12px; margin: 20px 0; }
+  .algo-section.init { border-color: #ffd93d; }
+  .algo-section.loop { border-color: #64ffda; }
+  .formula-box { background: #0f3460; border: 2px solid #bb86fc; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .note { background: #2d1b4e; border-left: 4px solid #bb86fc; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 16px; }
+  .why-box { background: #0a2e1a; border: 2px solid #64ffda; border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+  .why-box h3 { color: #64ffda; margin-bottom: 8px; font-size: 18px; }
+  .hand-calc { background: #1e1e3a; border: 2px solid #ffd93d; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .hand-calc h3 { color: #ffd93d; margin-bottom: 12px; font-size: 18px; }
+  .hand-calc .step { margin: 12px 0; padding-left: 16px; border-left: 2px solid #444; }
+  .hand-calc .step-label { color: #bb86fc; font-weight: bold; font-size: 16px; }
+  .hand-calc .result { color: #64ffda; font-weight: bold; }
+  .hand-calc .check { color: #ffd93d; font-style: italic; margin-top: 8px; }
+  .iter-header { background: #0f3460; border: 2px solid #64ffda; border-radius: 8px; padding: 12px 16px; margin: 28px 0 12px 0; font-size: 18px; color: #64ffda; font-weight: bold; }
+  .step-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  .step-table th { background: #0f3460; color: #64ffda; padding: 8px 10px; text-align: center; border-bottom: 2px solid #bb86fc; }
+  .step-table td { padding: 6px 10px; border-bottom: 1px solid #333; text-align: center; }
+  .step-table tr:nth-child(even) { background: #16213e; }
+  .hl { color: #64ffda; font-weight: bold; }
+  .red { color: #ff6b6b; }
+  .glossary { background: #16213e; border-radius: 12px; padding: 20px 24px; margin: 30px 0; }
+  .glossary h3 { color: #ffd93d; margin-bottom: 12px; }
+  .glossary dl { font-size: 15px; }
+  .glossary dt { color: #64ffda; font-weight: bold; margin-top: 10px; }
+  .glossary dd { margin-left: 20px; color: #ccc; }
+  .nav { margin-top: 40px; padding: 20px; background: #0f3460; border-radius: 12px; text-align: center; }
+  .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
+  .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Page 12: The Full Adam Algorithm</h1>
+<p class="subtitle">MATH 3850 &mdash; Adam Paper, Algorithm 1 &mdash; Every line explained, then a complete hand computation</p>
+
+<!-- ===================== PART A: THE ALGORITHM ===================== -->
+<span class="tag">PART A</span>
+<h2>The Complete Algorithm (Color-Coded)</h2>
+
+<div class="formula-box" style="text-align: left; padding: 28px;">
+  <p style="font-size: 20px; color: #ffd93d; font-weight: bold; margin-bottom: 16px;">Algorithm 1: Adam</p>
+
+  <p style="color: #888; font-size: 15px; margin-bottom: 20px;">
+    <strong>Inputs:</strong> $\alpha = 0.001$ (step size), $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$, $f(\theta)$ (loss function), $\theta_0$ (initial parameters)
+  </p>
+
+  <div class="algo-section init">
+    <p style="color: #ffd93d; font-weight: bold; margin-bottom: 8px;">INITIALIZATION</p>
+    <div class="algo-line"><span class="num">1</span><span>$m_0 \leftarrow 0$ (first moment &mdash; momentum vector, all zeros)</span><span class="explain">No gradient history yet</span></div>
+    <div class="algo-line"><span class="num">2</span><span>$v_0 \leftarrow 0$ (second moment &mdash; scale vector, all zeros)</span><span class="explain">No squared gradient history yet</span></div>
+    <div class="algo-line"><span class="num">3</span><span>$t \leftarrow 0$ (timestep counter)</span><span class="explain">Will increment each iteration</span></div>
+  </div>
+
+  <div class="algo-section loop" style="margin-top: 16px;">
+    <p style="color: #64ffda; font-weight: bold; margin-bottom: 8px;">REPEAT UNTIL CONVERGED</p>
+    <div class="algo-line" style="background:#1a2a1a;"><span class="num">4</span><span>$t \leftarrow t + 1$</span><span class="explain">Advance clock</span></div>
+    <div class="algo-line" style="background:#2a1a1a;"><span class="num">5</span><span style="color:#ff6b6b;">$g_t \leftarrow \nabla_\theta f_t(\theta_{t-1})$</span><span class="explain" style="color:#ff6b6b;">Compute gradient on random minibatch</span></div>
+    <div class="algo-line" style="background:#1a1a2e;"><span class="num">6</span><span style="color:#bb86fc;">$m_t \leftarrow \beta_1 \cdot m_{t-1} + (1 - \beta_1) \cdot g_t$</span><span class="explain" style="color:#bb86fc;">Update momentum (Page 09)</span></div>
+    <div class="algo-line" style="background:#1a1a2e;"><span class="num">7</span><span style="color:#ff6b6b;">$v_t \leftarrow \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g_t^2$</span><span class="explain" style="color:#ff6b6b;">Update scale tracker (Page 10)</span></div>
+    <div class="algo-line" style="background:#1a2a2a;"><span class="num">8</span><span style="color:#ffd93d;">$\hat{m}_t \leftarrow m_t \;/\; (1 - \beta_1^t)$</span><span class="explain" style="color:#ffd93d;">Bias-correct momentum (Page 11)</span></div>
+    <div class="algo-line" style="background:#1a2a2a;"><span class="num">9</span><span style="color:#ffd93d;">$\hat{v}_t \leftarrow v_t \;/\; (1 - \beta_2^t)$</span><span class="explain" style="color:#ffd93d;">Bias-correct scale (Page 11)</span></div>
+    <div class="algo-line" style="background:#0a2e1a;"><span class="num">10</span><span style="color:#64ffda; font-weight:bold;">$\theta_t \leftarrow \theta_{t-1} - \alpha \cdot \hat{m}_t \;/\; (\sqrt{\hat{v}_t} + \epsilon)$</span><span class="explain" style="color:#64ffda;">THE UPDATE &mdash; combine everything!</span></div>
+  </div>
+
+  <p style="margin-top: 16px; color: #ccc; font-size: 15px;"><strong>Return</strong> $\theta_t$ (the optimized parameters)</p>
+</div>
+
+<div class="why-box">
+  <h3>Line 10 decoded: the heart of Adam</h3>
+  <p style="font-size: 16px;">$\theta_t = \theta_{t-1} - \alpha \cdot \hat{m}_t \;/\; (\sqrt{\hat{v}_t} + \epsilon)$</p>
+  <p style="margin-top: 12px; font-size: 16px;">Compare to plain gradient descent: $\theta_t = \theta_{t-1} - \alpha \cdot g_t$</p>
+  <p style="margin-top: 12px; font-size: 16px;">Adam replaces $g_t$ with $\hat{m}_t / (\sqrt{\hat{v}_t} + \epsilon)$. This does two things at once:</p>
+  <ul style="margin: 8px 0 0 20px; font-size: 16px;">
+    <li><strong>$\hat{m}_t$ in the numerator</strong> = smoothed gradient (momentum kills the zigzag)</li>
+    <li><strong>$\sqrt{\hat{v}_t}$ in the denominator</strong> = per-parameter scaling (big gradient &rarr; big denominator &rarr; smaller step)</li>
+  </ul>
+  <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;">The ratio $\hat{m}_t / \sqrt{\hat{v}_t}$ is approximately $\pm 1$ for each parameter (Page 01 showed this). So the effective step size is approximately $\alpha$ for every parameter, regardless of gradient scale. <strong>That's the "trust region" property the paper discusses in Section 2.1.</strong></p>
+</div>
+
+<!-- ===================== PART B: DATAFLOW DIAGRAM ===================== -->
+<span class="tag">PART B</span>
+<h2>Data Flow: How the Pieces Connect</h2>
+
+<svg viewBox="0 0 800 280" style="width:100%; margin: 20px 0;">
+  <!-- Gradient input -->
+  <rect x="10" y="110" width="120" height="50" rx="10" fill="#3d1212" stroke="#ff6b6b" stroke-width="2"/>
+  <text x="70" y="130" text-anchor="middle" fill="#ff6b6b" font-size="12" font-weight="bold">GRADIENT</text>
+  <text x="70" y="148" text-anchor="middle" fill="#ccc" font-size="11">g_t (noisy)</text>
+
+  <!-- Arrow to m -->
+  <line x1="130" y1="125" x2="180" y2="65" stroke="#bb86fc" stroke-width="2"/>
+  <polygon points="177,68 183,62 187,72" fill="#bb86fc"/>
+
+  <!-- Arrow to v -->
+  <line x1="130" y1="145" x2="180" y2="200" stroke="#ff6b6b" stroke-width="2"/>
+  <polygon points="177,197 183,203 187,193" fill="#ff6b6b"/>
+
+  <!-- Momentum path -->
+  <rect x="190" y="30" width="140" height="65" rx="10" fill="#1e1e3a" stroke="#bb86fc" stroke-width="2"/>
+  <text x="260" y="52" text-anchor="middle" fill="#bb86fc" font-size="12" font-weight="bold">MOMENTUM</text>
+  <text x="260" y="70" text-anchor="middle" fill="#ccc" font-size="10">m_t = β₁·m + (1-β₁)·g</text>
+  <text x="260" y="85" text-anchor="middle" fill="#888" font-size="9">smooths direction</text>
+
+  <!-- Scale path -->
+  <rect x="190" y="175" width="140" height="65" rx="10" fill="#1e1e3a" stroke="#ff6b6b" stroke-width="2"/>
+  <text x="260" y="197" text-anchor="middle" fill="#ff6b6b" font-size="12" font-weight="bold">SCALE</text>
+  <text x="260" y="215" text-anchor="middle" fill="#ccc" font-size="10">v_t = β₂·v + (1-β₂)·g²</text>
+  <text x="260" y="230" text-anchor="middle" fill="#888" font-size="9">tracks gradient magnitude</text>
+
+  <!-- Arrow to bias correct -->
+  <line x1="330" y1="62" x2="390" y2="62" stroke="#ffd93d" stroke-width="2"/>
+  <polygon points="387,58 395,62 387,66" fill="#ffd93d"/>
+  <line x1="330" y1="207" x2="390" y2="207" stroke="#ffd93d" stroke-width="2"/>
+  <polygon points="387,203 395,207 387,211" fill="#ffd93d"/>
+
+  <!-- Bias correction -->
+  <rect x="400" y="30" width="120" height="65" rx="10" fill="#1e1e3a" stroke="#ffd93d" stroke-width="2"/>
+  <text x="460" y="52" text-anchor="middle" fill="#ffd93d" font-size="11" font-weight="bold">CORRECT</text>
+  <text x="460" y="70" text-anchor="middle" fill="#ccc" font-size="10">m̂ = m/(1-β₁ᵗ)</text>
+  <text x="460" y="85" text-anchor="middle" fill="#888" font-size="9">fix zero-init bias</text>
+
+  <rect x="400" y="175" width="120" height="65" rx="10" fill="#1e1e3a" stroke="#ffd93d" stroke-width="2"/>
+  <text x="460" y="197" text-anchor="middle" fill="#ffd93d" font-size="11" font-weight="bold">CORRECT</text>
+  <text x="460" y="215" text-anchor="middle" fill="#ccc" font-size="10">v̂ = v/(1-β₂ᵗ)</text>
+  <text x="460" y="230" text-anchor="middle" fill="#888" font-size="9">fix zero-init bias</text>
+
+  <!-- Arrows to combine -->
+  <line x1="520" y1="62" x2="590" y2="125" stroke="#64ffda" stroke-width="2"/>
+  <line x1="520" y1="207" x2="590" y2="145" stroke="#64ffda" stroke-width="2"/>
+
+  <!-- Combine box -->
+  <rect x="600" y="100" width="180" height="70" rx="14" fill="#0a2e1a" stroke="#64ffda" stroke-width="3"/>
+  <text x="690" y="125" text-anchor="middle" fill="#64ffda" font-size="13" font-weight="bold">UPDATE θ</text>
+  <text x="690" y="148" text-anchor="middle" fill="#e0e0e0" font-size="11">θ - α · m̂ / (√v̂ + ε)</text>
+  <text x="690" y="163" text-anchor="middle" fill="#888" font-size="9">direction ÷ scale = adaptive step</text>
+
+  <!-- Labels -->
+  <text x="155" y="50" text-anchor="middle" fill="#bb86fc" font-size="10">direction</text>
+  <text x="155" y="220" text-anchor="middle" fill="#ff6b6b" font-size="10">magnitude²</text>
+</svg>
+
+<!-- ===================== PART C: HAND COMPUTATION ===================== -->
+<span class="tag">PART C</span>
+<h2>Complete Hand Computation: 3 Iterations of Adam</h2>
+
+<div class="hand-calc">
+  <h3>Setup</h3>
+  <p>Minimize $f(\theta) = \theta^2$. Derivative: $f'(\theta) = 2\theta$.</p>
+  <p>Start at $\theta_0 = 5$. Hyperparameters: $\alpha = 0.1$, $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$.</p>
+  <p>Initialize: $m_0 = 0$, $v_0 = 0$, $t = 0$.</p>
+  <p style="color: #888; font-size: 15px;">(Using a simple 1-parameter function so we can focus on the algorithm, not the linear algebra.)</p>
+</div>
+
+<div class="iter-header">Iteration 1 ($t = 1$)</div>
+<div class="hand-calc" style="border-color: #64ffda;">
+  <div class="step">
+    <p class="step-label">Line 5 — Gradient: $g_1 = f'(\theta_0) = 2(5) = $ <span class="result">$10$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Line 6 — Momentum: $m_1 = 0.9(0) + 0.1(10) = 0 + 1 = $ <span class="result">$1$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Line 7 — Scale: $v_1 = 0.999(0) + 0.001(10^2) = 0 + 0.1 = $ <span class="result">$0.1$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Line 8 — Correct momentum: $\hat{m}_1 = \frac{1}{1 - 0.9^1} = \frac{1}{0.1} = $ <span class="result">$10$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Line 9 — Correct scale: $\hat{v}_1 = \frac{0.1}{1 - 0.999^1} = \frac{0.1}{0.001} = $ <span class="result">$100$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Line 10 — Update: $\theta_1 = 5 - 0.1 \times \frac{10}{\sqrt{100} + 10^{-8}} = 5 - 0.1 \times \frac{10}{10} = 5 - 0.1 = $ <span class="result">$4.9$</span></p>
+  </div>
+  <p class="check">Notice: effective step = $\alpha \times \hat{m}/\sqrt{\hat{v}} = 0.1 \times 10/10 = 0.1$. The step size is approximately $\alpha$ regardless of gradient magnitude! That's Adam's trust region property.</p>
+</div>
+
+<div class="iter-header">Iteration 2 ($t = 2$)</div>
+<div class="hand-calc" style="border-color: #64ffda;">
+  <div class="step">
+    <p class="step-label">Gradient: $g_2 = 2(4.9) = $ <span class="result">$9.8$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Momentum: $m_2 = 0.9(1) + 0.1(9.8) = 0.9 + 0.98 = $ <span class="result">$1.88$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Scale: $v_2 = 0.999(0.1) + 0.001(9.8^2) = 0.0999 + 0.09604 = $ <span class="result">$0.19594$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Correct: $\hat{m}_2 = \frac{1.88}{1 - 0.81} = \frac{1.88}{0.19} = $ <span class="result">$9.895$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Correct: $\hat{v}_2 = \frac{0.19594}{1 - 0.999^2} = \frac{0.19594}{0.001999} = $ <span class="result">$98.02$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Update: $\theta_2 = 4.9 - 0.1 \times \frac{9.895}{\sqrt{98.02} + 10^{-8}} = 4.9 - 0.1 \times \frac{9.895}{9.901} = 4.9 - 0.0999 = $ <span class="result">$4.8001$</span></p>
+  </div>
+  <p class="check">Again, effective step $\approx 0.1$. Adam takes steps of approximately $\alpha$ regardless of gradient size.</p>
+</div>
+
+<div class="iter-header">Iteration 3 ($t = 3$)</div>
+<div class="hand-calc" style="border-color: #64ffda;">
+  <div class="step">
+    <p class="step-label">Gradient: $g_3 = 2(4.8001) = $ <span class="result">$9.6002$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Momentum: $m_3 = 0.9(1.88) + 0.1(9.6002) = 1.692 + 0.96002 = $ <span class="result">$2.652$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Scale: $v_3 = 0.999(0.19594) + 0.001(9.6002^2) = 0.19574 + 0.09216 = $ <span class="result">$0.28790$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Correct: $\hat{m}_3 = \frac{2.652}{1 - 0.9^3} = \frac{2.652}{0.271} = $ <span class="result">$9.786$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Correct: $\hat{v}_3 = \frac{0.28790}{1 - 0.999^3} = \frac{0.28790}{0.002997} = $ <span class="result">$96.06$</span></p>
+  </div>
+  <div class="step">
+    <p class="step-label">Update: $\theta_3 = 4.8001 - 0.1 \times \frac{9.786}{\sqrt{96.06}} = 4.8001 - 0.1 \times \frac{9.786}{9.801} = 4.8001 - 0.0998 = $ <span class="result">$4.7003$</span></p>
+  </div>
+</div>
+
+<table class="step-table">
+  <thead>
+    <tr><th>$t$</th><th>$\theta$</th><th>$g_t$</th><th>$m_t$</th><th>$v_t$</th><th>$\hat{m}_t$</th><th>$\hat{v}_t$</th><th>Step</th><th>$\theta_{\text{new}}$</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>5.000</td><td class="red">10.0</td><td>1.000</td><td>0.100</td><td>10.00</td><td>100.0</td><td>0.100</td><td class="hl">4.900</td></tr>
+    <tr><td>2</td><td>4.900</td><td class="red">9.80</td><td>1.880</td><td>0.196</td><td>9.895</td><td>98.02</td><td>0.100</td><td class="hl">4.800</td></tr>
+    <tr><td>3</td><td>4.800</td><td class="red">9.60</td><td>2.652</td><td>0.288</td><td>9.786</td><td>96.06</td><td>0.100</td><td class="hl">4.700</td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Pattern:</strong> Adam takes steps of almost exactly $\alpha = 0.1$ each iteration, regardless of the gradient magnitude. That's the trust region property from Section 2.1 of the paper: $|\Delta_t| \lessapprox \alpha$. The step size is <em>bounded</em> by $\alpha$, which makes it easy to choose — you know roughly how far each step will go.
+</div>
+
+<!-- ===================== PART D: HYPERPARAMETERS ===================== -->
+<span class="tag">PART D</span>
+<h2>Why These Default Values?</h2>
+
+<div class="formula-box" style="text-align: left;">
+  <p style="font-size: 18px; margin-bottom: 16px; color: #ffd93d;">The paper's recommended defaults (Section 2):</p>
+  <ul style="font-size: 16px; margin-left: 20px;">
+    <li><strong>$\alpha = 0.001$</strong> &mdash; small base step size. Since Adam normalizes each step to $\approx \alpha$, this controls the overall pace. Most ML problems work well with $10^{-3}$ to $10^{-4}$.</li>
+    <li style="margin-top: 8px;"><strong>$\beta_1 = 0.9$</strong> &mdash; momentum decay. Averages roughly the last 10 gradients ($1/(1-0.9) = 10$). Enough to smooth noise without being too sluggish.</li>
+    <li style="margin-top: 8px;"><strong>$\beta_2 = 0.999$</strong> &mdash; scale decay. Averages roughly the last 1000 squared gradients ($1/(1-0.999) = 1000$). Long memory for stable per-parameter scaling.</li>
+    <li style="margin-top: 8px;"><strong>$\epsilon = 10^{-8}$</strong> &mdash; just prevents $0/0$. Doesn't affect results in practice.</li>
+  </ul>
+  <p style="margin-top: 16px; font-size: 16px; color: #64ffda;"><strong>Key insight from the paper:</strong> "Good default settings for the tested machine learning problems are $\alpha = 0.001$, $\beta_1 = 0.9$, $\beta_2 = 0.999$ and $\epsilon = 10^{-8}$." These almost never need to be changed.</p>
+</div>
+
+<div class="why-box">
+  <h3>Comparison to your course methods</h3>
+  <p><strong>Gradient descent:</strong> You had to choose $\alpha$ carefully (too big = diverge, too small = crawl). Adam's default $\alpha = 0.001$ works because the adaptive scaling handles the rest.</p>
+  <p style="margin-top: 8px;"><strong>Line search:</strong> Computed $\alpha$ each step, expensive. Adam doesn't need line search &mdash; the second moment handles it.</p>
+  <p style="margin-top: 8px;"><strong>BFGS:</strong> Built an $n \times n$ matrix. Adam stores just two vectors. Same concept (use gradient history to improve steps), radically simpler implementation.</p>
+</div>
+
+<!-- ===================== GLOSSARY ===================== -->
+<div class="glossary">
+  <h3>Glossary &mdash; Full Adam</h3>
+  <dl>
+    <dt>Adam</dt>
+    <dd><strong>Ada</strong>ptive <strong>M</strong>oment estimation. Combines momentum ($m_t$) + adaptive rates ($v_t$) + bias correction. The name comes from "adaptive moments."</dd>
+
+    <dt>Trust region property</dt>
+    <dd>Each Adam step is approximately bounded by $\alpha$. You know roughly how far each step will go. Compare to GD where step size depends unpredictably on gradient magnitude.</dd>
+
+    <dt>Hyperparameters</dt>
+    <dd>Settings you choose before training: $\alpha$, $\beta_1$, $\beta_2$, $\epsilon$. Adam's defaults rarely need changing.</dd>
+
+    <dt>The update rule</dt>
+    <dd>$\theta_t = \theta_{t-1} - \alpha \cdot \hat{m}_t / (\sqrt{\hat{v}_t} + \epsilon)$. Direction from momentum, scaling from second moment, corrected for initialization bias.</dd>
+  </dl>
+</div>
+
+<a href="concept-13-experiments.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
+  <p>Next: Page 13 &mdash; The Experiments</p>
+  <p>What the paper tested, what the plots show, and why Adam wins</p>
+</div></a>
+
+</div>
+</body>
+</html>
