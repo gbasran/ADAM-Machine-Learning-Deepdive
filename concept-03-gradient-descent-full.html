@@ -39,6 +39,9 @@
   .nav { margin-top: 40px; padding: 20px; background: #0f3460; border-radius: 12px; text-align: center; }
   .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
   .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
+  .breakdown { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 16px 0; font-size: 16px; }
+  .breakdown dt { color: #64ffda; text-align: right; font-weight: bold; }
+  .breakdown dd { color: #ccc; }
 </style>
 </head>
 <body>
@@ -72,6 +75,7 @@
 
 <div class="hand-calc">
   <h3>Hand Computation: Why $\alpha$ too big causes bouncing</h3>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">We trace GD on a simple quadratic to see what happens when the step size $\alpha$ is nearly at the stability limit. The GD update rule is $x_{k+1} = x_k - \alpha \cdot f'(x_k)$.</p>
   <p>$f(x) = x^2$, derivative $= 2x$, $\alpha = 0.9$, start at $x_0 = 10$:</p>
 
   <div class="step">
@@ -94,9 +98,16 @@
 
 <div class="formula-box" style="text-align: left;">
   <p style="font-size: 18px; color: #ffd93d; font-weight: bold;">The stability condition for $f(x) = \frac{1}{2}x^TQx$:</p>
-  <p style="margin: 12px 0;">For GD to converge, $\alpha$ must satisfy: $\alpha < \frac{2}{\lambda_{\max}(Q)}$</p>
-  <p style="font-size: 15px; color: #888;">where $\lambda_{\max}$ is the largest eigenvalue of $Q$.</p>
-  <p style="margin-top: 12px; font-size: 16px;">For $f(x) = x^2$: $Q = 2$, so $\alpha < 2/2 = 1$. That's why $\alpha = 0.9$ barely works but $\alpha = 1.1$ would explode.</p>
+  <p style="margin: 12px 0;">For GD to converge, $\alpha$ must satisfy: $\alpha \lt \frac{2}{\lambda_{\max}(Q)}$</p>
+  <dl class="breakdown">
+    <dt>$\alpha$</dt>
+    <dd>The step size (learning rate) used each iteration of gradient descent</dd>
+    <dt>$\lambda_{\max}(Q)$</dt>
+    <dd>The largest eigenvalue of $Q$; controls the steepest curvature direction</dd>
+    <dt>$\frac{2}{\lambda_{\max}}$</dt>
+    <dd>The critical threshold: any $\alpha$ above this causes GD to diverge (blow up)</dd>
+  </dl>
+  <p style="margin-top: 12px; font-size: 16px;">For $f(x) = x^2$: $Q = 2$, so $\alpha \lt 2/2 = 1$. That's why $\alpha = 0.9$ barely works but $\alpha = 1.1$ would explode.</p>
 </div>
 
 <!-- ===================== PART B: CONVERGENCE ===================== -->
@@ -116,6 +127,20 @@
   <p style="font-size: 18px; color: #64ffda; font-weight: bold;">Linear convergence (gradient descent):</p>
   <p style="margin: 8px 0;">$$\|x_{k+1} - x^*\| \leq r \cdot \|x_k - x^*\| \quad \text{where } r = \frac{\kappa - 1}{\kappa + 1}$$</p>
   <p style="font-size: 16px;">Each step, the distance to the minimum shrinks by the same ratio $r$. If $r = 0.8$, you lose 20% each step.</p>
+  <dl class="breakdown">
+    <dt>$x_{k+1}$</dt>
+    <dd>The next iterate (where we land after one GD step)</dd>
+    <dt>$x_k$</dt>
+    <dd>The current iterate (where we are now)</dd>
+    <dt>$x^*$</dt>
+    <dd>The true minimum of the function (what we are trying to reach)</dd>
+    <dt>$\|x_k - x^*\|$</dt>
+    <dd>Distance from the current point to the minimum; "how far we still have to go"</dd>
+    <dt>$r$</dt>
+    <dd>Convergence ratio: the fraction of error that remains after each step (lower is faster)</dd>
+    <dt>$\kappa$</dt>
+    <dd>Condition number $= \lambda_{\max}/\lambda_{\min}$; measures how stretched the bowl is (1 = round, 100 = bathtub)</dd>
+  </dl>
   <p style="margin-top: 12px; font-size: 16px;"><strong>$\kappa$ (kappa)</strong> is the <strong>condition number</strong> &mdash; it measures how "stretched" the bowl is.</p>
   <p style="margin-top: 8px; font-size: 16px; color: #ffd93d;">$\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$ = ratio of largest to smallest eigenvalue of $Q$</p>
 </div>
@@ -140,6 +165,7 @@
 
 <div class="hand-calc">
   <h3>Hand Computation: Condition Numbers from Your Assignments</h3>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">For each diagonal $Q$, the eigenvalues are just the diagonal entries. The condition number $\kappa = \lambda_{\max}/\lambda_{\min}$ tells us how stretched the bowl is, and the convergence ratio $r = (\kappa - 1)/(\kappa + 1)$ tells us how much error remains after each GD step.</p>
 
   <div class="step">
     <p class="step-label">Assignment 2 (SR1): $Q = \begin{bmatrix}2&0\\0&1\end{bmatrix}$</p>
@@ -169,7 +195,47 @@
 </div>
 <div class="note">
   <strong>Left ($\kappa = 1$, round):</strong> Contours are circular. GD goes straight to the center. No zigzag.<br><br>
-  <strong>Right ($\kappa = 10$, stretched):</strong> Contours are elongated ellipses. GD zigzags because y is 10x steeper than x, but $\alpha$ is the same for both. <strong>This is the fundamental limitation that Adam's adaptive learning rates fix</strong> &mdash; give x and y their own step sizes.
+  <strong>Right ($\kappa = 10$, stretched):</strong> Contours are elongated ellipses. GD zigzags because y is 10x steeper than x, but $\alpha$ is the same for both. <strong>This is the fundamental limitation that Adam's adaptive learning rates fix</strong>: give x and y their own step sizes.
+</div>
+
+<div style="margin: 24px 0; text-align: center;">
+  <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width: 700px; width: 100%;">
+    <!-- Round contours (kappa ~1) -->
+    <g transform="translate(170,150)">
+      <text x="0" y="-130" text-anchor="middle" fill="#64ffda" font-size="14" font-weight="bold">$\kappa \approx 1$ (round bowl)</text>
+      <ellipse cx="0" cy="0" rx="110" ry="110" fill="none" stroke="#333" stroke-width="1"/>
+      <ellipse cx="0" cy="0" rx="80" ry="80" fill="none" stroke="#444" stroke-width="1"/>
+      <ellipse cx="0" cy="0" rx="50" ry="50" fill="none" stroke="#555" stroke-width="1"/>
+      <ellipse cx="0" cy="0" rx="20" ry="20" fill="none" stroke="#666" stroke-width="1"/>
+      <circle cx="0" cy="0" r="3" fill="#ffd93d"/>
+      <!-- GD path: straight to center -->
+      <polyline points="95,-40 60,-25 30,-12 10,-5 0,0" fill="none" stroke="#64ffda" stroke-width="2.5" marker-end="url(#arrow3)"/>
+      <circle cx="95" cy="-40" r="5" fill="#ff6b6b"/>
+      <text x="95" y="-50" text-anchor="middle" fill="#ff6b6b" font-size="11">start</text>
+      <text x="0" y="135" text-anchor="middle" fill="#888" font-size="12">GD goes straight to center</text>
+    </g>
+    <!-- Elongated contours (kappa ~10) -->
+    <g transform="translate(520,150)">
+      <text x="0" y="-130" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">$\kappa = 10$ (stretched)</text>
+      <ellipse cx="0" cy="0" rx="130" ry="40" fill="none" stroke="#333" stroke-width="1"/>
+      <ellipse cx="0" cy="0" rx="95" ry="28" fill="none" stroke="#444" stroke-width="1"/>
+      <ellipse cx="0" cy="0" rx="60" ry="17" fill="none" stroke="#555" stroke-width="1"/>
+      <ellipse cx="0" cy="0" rx="25" ry="7" fill="none" stroke="#666" stroke-width="1"/>
+      <circle cx="0" cy="0" r="3" fill="#ffd93d"/>
+      <!-- GD zigzag path -->
+      <polyline points="90,-35 20,28 55,-18 8,15 25,-8 2,5 0,0" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4,2"/>
+      <circle cx="90" cy="-35" r="5" fill="#ff6b6b"/>
+      <text x="90" y="-45" text-anchor="middle" fill="#ff6b6b" font-size="11">start</text>
+      <text x="0" y="135" text-anchor="middle" fill="#888" font-size="12">GD zigzags across the narrow axis</text>
+    </g>
+    <!-- Arrow marker -->
+    <defs>
+      <marker id="arrow3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#64ffda"/>
+      </marker>
+    </defs>
+  </svg>
+  <p style="font-size: 14px; color: #888; margin-top: 8px;">Round contours ($\kappa \approx 1$): GD heads straight for the minimum. Elongated contours ($\kappa = 10$): GD wastes steps zigzagging across the narrow axis.</p>
 </div>
 
 <div class="problem-box">

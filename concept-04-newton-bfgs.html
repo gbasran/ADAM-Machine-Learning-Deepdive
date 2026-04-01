@@ -44,6 +44,9 @@
   .nav { margin-top: 40px; padding: 20px; background: #0f3460; border-radius: 12px; text-align: center; }
   .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
   .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
+  .breakdown { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 16px 0; font-size: 16px; }
+  .breakdown dt { color: #64ffda; text-align: right; font-weight: bold; }
+  .breakdown dd { color: #ccc; }
 </style>
 </head>
 <body>
@@ -65,8 +68,55 @@
   <p style="font-size: 18px; margin-bottom: 12px;">The Hessian is the matrix of <strong>second</strong> partial derivatives:</p>
   <p style="text-align: center; font-size: 20px; margin: 16px 0;">$$\nabla^2 f = \begin{bmatrix} \frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} \\ \frac{\partial^2 f}{\partial y \partial x} & \frac{\partial^2 f}{\partial y^2} \end{bmatrix}$$</p>
   <p style="font-size: 16px;"><strong>Gradient</strong> = first derivatives = slope (direction). <strong>Hessian</strong> = second derivatives = curvature (how fast the slope changes).</p>
+  <dl class="breakdown">
+    <dt>$\nabla^2 f$</dt>
+    <dd>The Hessian matrix: collects all second partial derivatives of $f$</dd>
+    <dt>$\frac{\partial^2 f}{\partial x^2}$</dt>
+    <dd>Curvature in the $x$ direction (how fast the $x$-slope is changing)</dd>
+    <dt>$\frac{\partial^2 f}{\partial y^2}$</dt>
+    <dd>Curvature in the $y$ direction</dd>
+    <dt>$\frac{\partial^2 f}{\partial x \partial y}$</dt>
+    <dd>Cross-curvature: how the $x$-slope changes as you move in $y$ (off-diagonal entries; zero for separable functions)</dd>
+  </dl>
   <p style="font-size: 16px; margin-top: 12px;">For $f(x,y) = x^2 + 3y^2$: $\nabla^2 f = \begin{bmatrix}2&0\\0&6\end{bmatrix}$</p>
-  <p style="font-size: 15px; color: #888;">Curvature in x is 2 (gentle), curvature in y is 6 (steep). The Hessian captures this difference &mdash; GD can't.</p>
+  <p style="font-size: 15px; color: #888;">Curvature in x is 2 (gentle), curvature in y is 6 (steep). The Hessian captures this difference; GD cannot.</p>
+</div>
+
+<div style="margin: 24px 0; text-align: center;">
+  <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" style="max-width: 700px; width: 100%;">
+    <!-- Low curvature (left) -->
+    <g transform="translate(170,130)">
+      <text x="0" y="-110" text-anchor="middle" fill="#64ffda" font-size="14" font-weight="bold">Low curvature ($f'' = 2$)</text>
+      <!-- Gentle parabola -->
+      <path d="M -120,60 Q -60,0 0,-40 Q 60,0 120,60" fill="none" stroke="#64ffda" stroke-width="2.5"/>
+      <!-- Tangent line at a point -->
+      <line x1="-80" y1="50" x2="10" y2="-20" stroke="#ffd93d" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <circle cx="-40" cy="15" r="4" fill="#ffd93d"/>
+      <!-- Big step arrow -->
+      <line x1="-40" y1="25" x2="40" y2="-25" stroke="#bb86fc" stroke-width="2" marker-end="url(#arrow4)"/>
+      <text x="10" y="-30" fill="#bb86fc" font-size="11">big step OK</text>
+      <text x="0" y="95" text-anchor="middle" fill="#888" font-size="12">Gentle hill: safe to take big steps</text>
+    </g>
+    <!-- High curvature (right) -->
+    <g transform="translate(520,130)">
+      <text x="0" y="-110" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">High curvature ($f'' = 6$)</text>
+      <!-- Steep parabola -->
+      <path d="M -80,80 Q -40,-20 0,-80 Q 40,-20 80,80" fill="none" stroke="#ff6b6b" stroke-width="2.5"/>
+      <!-- Tangent line -->
+      <line x1="-70" y1="70" x2="-10" y2="-40" stroke="#ffd93d" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <circle cx="-45" cy="25" r="4" fill="#ffd93d"/>
+      <!-- Small step arrow -->
+      <line x1="-45" y1="35" x2="-20" y2="0" stroke="#bb86fc" stroke-width="2" marker-end="url(#arrow4)"/>
+      <text x="-10" y="-5" fill="#bb86fc" font-size="11">tiny step</text>
+      <text x="0" y="105" text-anchor="middle" fill="#888" font-size="12">Steep curve: must take small steps</text>
+    </g>
+    <defs>
+      <marker id="arrow4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#bb86fc"/>
+      </marker>
+    </defs>
+  </svg>
+  <p style="font-size: 14px; color: #888; margin-top: 8px;">The Hessian tells Newton's method how much curvature each direction has, so it can automatically pick big steps where the curve is gentle and small steps where it is steep.</p>
 </div>
 
 <!-- ===================== PART B: NEWTON'S METHOD ===================== -->
@@ -83,6 +133,18 @@
   <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$p_k = -[\nabla^2 f(x_k)]^{-1} \nabla f(x_k)$$</p>
   <p style="font-size: 16px;">In English: "invert the Hessian, multiply by the gradient, negate."</p>
   <p style="font-size: 16px; margin-top: 12px;">Compare to GD: $p_k = -\alpha \cdot \nabla f(x_k)$</p>
+  <dl class="breakdown">
+    <dt>$p_k$</dt>
+    <dd>The Newton step: the direction and distance to move from the current point</dd>
+    <dt>$\nabla^2 f(x_k)$</dt>
+    <dd>The Hessian at the current point $x_k$; captures curvature in every direction</dd>
+    <dt>$[\nabla^2 f(x_k)]^{-1}$</dt>
+    <dd>The inverse Hessian; converts the gradient into a curvature-scaled step (big steps where gentle, small steps where steep)</dd>
+    <dt>$\nabla f(x_k)$</dt>
+    <dd>The gradient at $x_k$; points in the direction of steepest ascent</dd>
+    <dt>$-$</dt>
+    <dd>Negate so we step downhill (opposite to the gradient direction)</dd>
+  </dl>
   <p style="font-size: 16px; margin-top: 8px; color: #ffd93d;">Newton replaces the fixed $\alpha$ with the inverse Hessian $[\nabla^2 f]^{-1}$. The Hessian automatically scales each direction by its curvature. No step size needed!</p>
 </div>
 
@@ -96,6 +158,7 @@
 
 <div class="hand-calc">
   <h3>Hand Computation: Newton Step (mirroring Quiz 4)</h3>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">Newton's method: compute the gradient (which way is downhill), compute the Hessian (how curvy is the ground), invert the Hessian, then multiply to get a step that accounts for curvature in every direction.</p>
   <p>$f(x_1, x_2) = x_1^2 + 3x_2^2$, starting at $x_0 = [4, 2]^T$</p>
 
   <div class="step">
@@ -143,18 +206,28 @@
 <div class="formula-box" style="text-align: left;">
   <p style="font-size: 18px; margin-bottom: 12px;">BFGS update (from Assignment 2):</p>
   <p style="text-align: center; font-size: 18px; margin: 12px 0;">$$H_{k+1} = (I - \rho_k s_k y_k^T) H_k (I - \rho_k y_k s_k^T) + \rho_k s_k s_k^T$$</p>
-  <p style="font-size: 16px; margin-top: 12px;">Where:</p>
-  <ul style="margin-left: 20px; font-size: 16px;">
-    <li>$H_k$ = current approximation to $[\nabla^2 f]^{-1}$ (inverse Hessian)</li>
-    <li>$s_k = x_{k+1} - x_k$ = the step you just took</li>
-    <li>$y_k = g_{k+1} - g_k$ = how the gradient changed</li>
-    <li>$\rho_k = 1/(y_k^T s_k)$ = a scalar</li>
-  </ul>
+  <dl class="breakdown">
+    <dt>$H_{k+1}$</dt>
+    <dd>The updated inverse-Hessian approximation (what we are computing)</dd>
+    <dt>$H_k$</dt>
+    <dd>The current inverse-Hessian approximation; starts as $I$ (identity) and improves each iteration</dd>
+    <dt>$s_k$</dt>
+    <dd>$= x_{k+1} - x_k$: the step we just took (position change)</dd>
+    <dt>$y_k$</dt>
+    <dd>$= g_{k+1} - g_k$: how the gradient changed after that step (tells us about curvature along $s_k$)</dd>
+    <dt>$\rho_k$</dt>
+    <dd>$= 1/(y_k^T s_k)$: a scalar normalizing factor that keeps the update well-scaled</dd>
+    <dt>$I$</dt>
+    <dd>The identity matrix; the "do nothing" starting point before BFGS learns any curvature</dd>
+    <dt>$s_k y_k^T$</dt>
+    <dd>An outer product (rank-1 matrix) encoding the relationship between the step and the gradient change</dd>
+  </dl>
   <p style="font-size: 16px; margin-top: 12px; color: #ffd93d;"><strong>Key idea:</strong> You learn about the curvature from how the gradient CHANGED when you took a step. If the gradient changed a lot &rarr; high curvature. If it barely changed &rarr; low curvature.</p>
 </div>
 
 <div class="hand-calc">
   <h3>Hand Computation: One BFGS Iteration (from A2)</h3>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">BFGS starts with $H_0 = I$ (no curvature information), so the first step is just steepest descent. After that step, it uses the gradient change to update $H$ toward the true inverse Hessian $Q^{-1}$.</p>
   <p>$f(x) = \frac{1}{2}x^TQx$ with $Q = \begin{bmatrix}2&0\\0&3\end{bmatrix}$, $x_0 = [1,1]^T$, $H_0 = I$</p>
 
   <div class="step">

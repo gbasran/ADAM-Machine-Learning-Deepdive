@@ -44,6 +44,9 @@
   .nav { margin-top: 40px; padding: 20px; background: #0f3460; border-radius: 12px; text-align: center; }
   .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
   .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
+  .breakdown { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 16px 0; font-size: 16px; }
+  .breakdown dt { color: #64ffda; text-align: right; font-weight: bold; }
+  .breakdown dd { color: #ccc; }
 </style>
 </head>
 <body>
@@ -73,6 +76,46 @@
   <strong>Right (non-convex):</strong> A bumpy function with multiple valleys. Gradient descent might find the purple dot (local minimum) instead of the yellow star (global minimum). It depends on where you start. This is why non-convex problems are hard.
 </div>
 
+<div style="margin: 24px 0; text-align: center;">
+  <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" style="max-width: 700px; width: 100%;">
+    <!-- Convex function (left) -->
+    <g transform="translate(10,0)">
+      <text x="160" y="20" text-anchor="middle" fill="#64ffda" font-size="15" font-weight="bold">Convex (bowl)</text>
+      <!-- Axes -->
+      <line x1="30" y1="210" x2="300" y2="210" stroke="#555" stroke-width="1"/>
+      <line x1="30" y1="210" x2="30" y2="30" stroke="#555" stroke-width="1"/>
+      <!-- Parabola: f(x) = x^2 shape -->
+      <path d="M 40,190 Q 80,200 120,160 Q 160,40 200,160 Q 240,200 280,190" fill="none" stroke="#64ffda" stroke-width="2.5"/>
+      <!-- Chord (secant line) -->
+      <line x1="80" y1="185" x2="240" y2="185" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="6,4"/>
+      <!-- Points on curve -->
+      <circle cx="80" cy="185" r="4" fill="#ffd93d"/>
+      <circle cx="240" cy="185" r="4" fill="#ffd93d"/>
+      <!-- Minimum dot -->
+      <circle cx="160" cy="40" r="5" fill="#64ffda"/>
+      <text x="160" y="230" text-anchor="middle" fill="#888" font-size="12">Curve always below the line</text>
+    </g>
+    <!-- Non-convex function (right) -->
+    <g transform="translate(360,0)">
+      <text x="160" y="20" text-anchor="middle" fill="#ff6b6b" font-size="15" font-weight="bold">Non-convex (bumpy)</text>
+      <!-- Axes -->
+      <line x1="30" y1="210" x2="300" y2="210" stroke="#555" stroke-width="1"/>
+      <line x1="30" y1="210" x2="30" y2="30" stroke="#555" stroke-width="1"/>
+      <!-- Bumpy curve -->
+      <path d="M 40,120 Q 70,190 100,140 Q 130,60 160,100 Q 190,160 220,80 Q 250,30 280,110" fill="none" stroke="#ff6b6b" stroke-width="2.5"/>
+      <!-- Chord that the curve crosses above -->
+      <line x1="70" y1="170" x2="250" y2="50" stroke="#ffd93d" stroke-width="2" stroke-dasharray="6,4"/>
+      <!-- Local min marker -->
+      <circle cx="100" cy="140" r="4" fill="#bb86fc"/>
+      <text x="100" y="155" text-anchor="middle" fill="#bb86fc" font-size="10">local min</text>
+      <!-- Global min marker -->
+      <circle cx="220" cy="80" r="5" fill="#ffd93d"/>
+      <text x="220" y="72" text-anchor="middle" fill="#ffd93d" font-size="10">global min</text>
+      <text x="160" y="230" text-anchor="middle" fill="#888" font-size="12">Curve pokes ABOVE the line</text>
+    </g>
+  </svg>
+</div>
+
 <!-- ===================== PART B: FORMAL DEFINITION ===================== -->
 <span class="tag">PART B</span>
 <h2>The Formal Definition (and What It Actually Means)</h2>
@@ -81,6 +124,23 @@
   <p style="font-size: 18px; margin-bottom: 12px;">A function $f$ is <strong>convex</strong> if for any two points $x$ and $y$, and any $\alpha \in [0, 1]$:</p>
   <p style="font-size: 20px; text-align: center; margin: 16px 0;">$$f(\alpha x + (1-\alpha)y) \leq \alpha f(x) + (1-\alpha)f(y)$$</p>
   <p style="font-size: 16px;">This looks scary but it's just saying: <strong>"the curve lies below any straight line drawn between two of its points."</strong></p>
+
+  <dl class="breakdown">
+    <dt>$f$</dt>
+    <dd>The function we are testing for convexity (e.g., $f(x) = x^2$)</dd>
+    <dt>$x, y$</dt>
+    <dd>Any two points in the domain; we pick them freely</dd>
+    <dt>$\alpha$</dt>
+    <dd>A blending weight between 0 and 1; controls where we sit on the line segment from $x$ to $y$</dd>
+    <dt>$\alpha x + (1-\alpha)y$</dt>
+    <dd>A point partway between $x$ and $y$ (the "midpoint" when $\alpha = 0.5$)</dd>
+    <dt>Left side</dt>
+    <dd>$f$ evaluated at that in-between point: the actual height of the curve</dd>
+    <dt>Right side</dt>
+    <dd>The corresponding point on the straight line connecting $f(x)$ and $f(y)$</dd>
+    <dt>$\leq$</dt>
+    <dd>Convexity means the curve never rises above the line</dd>
+  </dl>
 
   <p style="font-size: 16px; margin-top: 16px; color: #ffd93d;">In plain English:</p>
   <ul style="margin: 8px 0 0 20px; font-size: 16px;">
@@ -93,6 +153,7 @@
 
 <div class="hand-calc">
   <h3>Hand Computation: Is $f(x) = x^2$ convex?</h3>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">We verify the convexity inequality by picking two concrete points and checking that the function value at the midpoint is below the line connecting the function values at those points.</p>
   <p>Test with $x = -2$, $y = 3$, $\alpha = 0.5$ (midpoint):</p>
 
   <div class="step">
@@ -127,8 +188,16 @@
 
 <div class="formula-box" style="text-align: left;">
   <p><strong>For one variable:</strong></p>
-  <p style="margin: 8px 0;">$f''(x) > 0$ everywhere &rArr; convex (curves up, like a bowl)</p>
-  <p style="margin: 8px 0;">$f''(x) < 0$ everywhere &rArr; concave (curves down, like a hat)</p>
+  <p style="margin: 8px 0;">$f''(x) \gt 0$ everywhere &rArr; convex (curves up, like a bowl)</p>
+  <p style="margin: 8px 0;">$f''(x) \lt 0$ everywhere &rArr; concave (curves down, like a hat)</p>
+  <dl class="breakdown">
+    <dt>$f''(x)$</dt>
+    <dd>The second derivative of $f$; measures how fast the slope is changing (curvature)</dd>
+    <dt>$\gt 0$</dt>
+    <dd>Curvature is positive everywhere, so the function curves upward like a bowl</dd>
+    <dt>$\lt 0$</dt>
+    <dd>Curvature is negative everywhere, so the function curves downward like a hat</dd>
+  </dl>
 
   <p style="margin-top: 20px;"><strong>For multiple variables:</strong></p>
   <p style="margin: 8px 0;">Hessian $\nabla^2 f(x)$ is positive definite everywhere &rArr; convex</p>

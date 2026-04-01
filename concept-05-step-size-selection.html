@@ -43,6 +43,9 @@
   .nav { margin-top: 40px; padding: 20px; background: #0f3460; border-radius: 12px; text-align: center; }
   .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
   .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
+  .breakdown { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 16px 0; font-size: 16px; }
+  .breakdown dt { color: #64ffda; text-align: right; font-weight: bold; }
+  .breakdown dd { color: #ccc; }
 </style>
 </head>
 <body>
@@ -64,19 +67,33 @@
   <p style="font-size: 18px; margin-bottom: 12px;">For a quadratic $f(x) = \frac{1}{2}x^TQx$:</p>
   <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$\alpha_k = \frac{g_k^T g_k}{g_k^T Q g_k}$$</p>
   <p style="font-size: 16px;">This gives the <strong>exact</strong> step size that minimizes $f$ along the gradient direction.</p>
+  <dl class="breakdown">
+    <dt>$\alpha_k$</dt>
+    <dd>The optimal step size at iteration $k$; changes every iteration because the gradient changes</dd>
+    <dt>$g_k$</dt>
+    <dd>The gradient $\nabla f(x_k)$ at the current point; for quadratics $g_k = Qx_k$</dd>
+    <dt>$g_k^T g_k$</dt>
+    <dd>Dot product of the gradient with itself; equals $\|g_k\|^2$, the squared magnitude of the gradient</dd>
+    <dt>$Q$</dt>
+    <dd>The Hessian matrix of the quadratic; encodes curvature in every direction</dd>
+    <dt>$g_k^T Q g_k$</dt>
+    <dd>The gradient "weighted" by curvature; large when the gradient points along a steep direction, small when along a flat direction</dd>
+  </dl>
   <p style="font-size: 16px; margin-top: 12px; color: #ffd93d;"><strong>Why this formula?</strong> Set $\frac{d}{d\alpha}f(x_k - \alpha g_k) = 0$ and solve for $\alpha$. The numerator ($g^Tg$) is the gradient magnitude. The denominator ($g^TQg$) accounts for curvature in that direction.</p>
 </div>
 
 <div class="hand-calc">
   <h3>Hand Computation: Exact Line Search (from A1/A2)</h3>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">We compute the optimal step size $\alpha_0$ for the first GD iteration. The gradient $g_0 = Qx_0$ tells us the direction; the formula $\alpha = g^Tg / g^TQg$ tells us exactly how far to go.</p>
   <p>$Q = \begin{bmatrix}2&0\\0&3\end{bmatrix}$, $x_0 = [1, 1]^T$, so $g_0 = Qx_0 = [2, 3]^T$</p>
 
   <div class="step">
-    <p class="step-label">Numerator: $g_0^T g_0$</p>
+    <p class="step-label">Numerator: $g_0^T g_0$ (squared gradient magnitude)</p>
     <p>$[2, 3] \cdot [2, 3] = 4 + 9 = $ <span class="result">$13$</span></p>
+    <p style="color:#888; font-size:15px;">This measures how steep the slope is at $x_0$.</p>
   </div>
   <div class="step">
-    <p class="step-label">Denominator: $g_0^T Q g_0$</p>
+    <p class="step-label">Denominator: $g_0^T Q g_0$ (gradient weighted by curvature)</p>
     <p>First: $Qg_0 = \begin{bmatrix}2&0\\0&3\end{bmatrix}\begin{bmatrix}2\\3\end{bmatrix} = \begin{bmatrix}4\\9\end{bmatrix}$</p>
     <p>Then: $g_0^T (Qg_0) = [2, 3] \cdot [4, 9] = 8 + 27 = $ <span class="result">$35$</span></p>
   </div>
