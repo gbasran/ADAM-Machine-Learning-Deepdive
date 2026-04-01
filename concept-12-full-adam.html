@@ -51,13 +51,16 @@
   .nav p:first-child { color: #64ffda; font-size: 18px; font-weight: bold; }
   .nav p:last-child { color: #ccc; font-size: 15px; margin-top: 4px; }
   svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+  .breakdown { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 16px 0; font-size: 16px; }
+  .breakdown dt { color: #64ffda; text-align: right; font-weight: bold; }
+  .breakdown dd { color: #ccc; }
 </style>
 </head>
 <body>
 <div class="container">
 
 <h1>Page 12: The Full Adam Algorithm</h1>
-<p class="subtitle">MATH 3850 &mdash; Adam Paper, Algorithm 1 &mdash; Every line explained, then a complete hand computation</p>
+<p class="subtitle">MATH 3850  -- Adam Paper, Algorithm 1  -- Every line explained, then a complete hand computation</p>
 
 <!-- ===================== PART A: THE ALGORITHM ===================== -->
 <span class="tag">PART A</span>
@@ -72,8 +75,8 @@
 
   <div class="algo-section init">
     <p style="color: #ffd93d; font-weight: bold; margin-bottom: 8px;">INITIALIZATION</p>
-    <div class="algo-line"><span class="num">1</span><span>$m_0 \leftarrow 0$ (first moment &mdash; momentum vector, all zeros)</span><span class="explain">No gradient history yet</span></div>
-    <div class="algo-line"><span class="num">2</span><span>$v_0 \leftarrow 0$ (second moment &mdash; scale vector, all zeros)</span><span class="explain">No squared gradient history yet</span></div>
+    <div class="algo-line"><span class="num">1</span><span>$m_0 \leftarrow 0$ (first moment  -- momentum vector, all zeros)</span><span class="explain">No gradient history yet</span></div>
+    <div class="algo-line"><span class="num">2</span><span>$v_0 \leftarrow 0$ (second moment  -- scale vector, all zeros)</span><span class="explain">No squared gradient history yet</span></div>
     <div class="algo-line"><span class="num">3</span><span>$t \leftarrow 0$ (timestep counter)</span><span class="explain">Will increment each iteration</span></div>
   </div>
 
@@ -85,7 +88,7 @@
     <div class="algo-line" style="background:#1a1a2e;"><span class="num">7</span><span style="color:#ff6b6b;">$v_t \leftarrow \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g_t^2$</span><span class="explain" style="color:#ff6b6b;">Update scale tracker (Page 10)</span></div>
     <div class="algo-line" style="background:#1a2a2a;"><span class="num">8</span><span style="color:#ffd93d;">$\hat{m}_t \leftarrow m_t \;/\; (1 - \beta_1^t)$</span><span class="explain" style="color:#ffd93d;">Bias-correct momentum (Page 11)</span></div>
     <div class="algo-line" style="background:#1a2a2a;"><span class="num">9</span><span style="color:#ffd93d;">$\hat{v}_t \leftarrow v_t \;/\; (1 - \beta_2^t)$</span><span class="explain" style="color:#ffd93d;">Bias-correct scale (Page 11)</span></div>
-    <div class="algo-line" style="background:#0a2e1a;"><span class="num">10</span><span style="color:#64ffda; font-weight:bold;">$\theta_t \leftarrow \theta_{t-1} - \alpha \cdot \hat{m}_t \;/\; (\sqrt{\hat{v}_t} + \epsilon)$</span><span class="explain" style="color:#64ffda;">THE UPDATE &mdash; combine everything!</span></div>
+    <div class="algo-line" style="background:#0a2e1a;"><span class="num">10</span><span style="color:#64ffda; font-weight:bold;">$\theta_t \leftarrow \theta_{t-1} - \alpha \cdot \hat{m}_t \;/\; (\sqrt{\hat{v}_t} + \epsilon)$</span><span class="explain" style="color:#64ffda;">THE UPDATE  -- combine everything!</span></div>
   </div>
 
   <p style="margin-top: 16px; color: #ccc; font-size: 15px;"><strong>Return</strong> $\theta_t$ (the optimized parameters)</p>
@@ -94,6 +97,21 @@
 <div class="why-box">
   <h3>Line 10 decoded: the heart of Adam</h3>
   <p style="font-size: 16px;">$\theta_t = \theta_{t-1} - \alpha \cdot \hat{m}_t \;/\; (\sqrt{\hat{v}_t} + \epsilon)$</p>
+
+  <dl class="breakdown">
+    <dt>$\theta_t$</dt>
+    <dd>Updated parameters at timestep $t$ (what we are solving for)</dd>
+    <dt>$\theta_{t-1}$</dt>
+    <dd>Parameters from the previous step (our current position)</dd>
+    <dt>$\alpha$</dt>
+    <dd>Base step size (learning rate). Default 0.001. Because Adam normalizes steps, this directly controls how far each step goes</dd>
+    <dt>$\hat{m}_t$</dt>
+    <dd>Bias-corrected first moment: the smoothed gradient direction (numerator = which way to go)</dd>
+    <dt>$\sqrt{\hat{v}_t}$</dt>
+    <dd>Square root of bias-corrected second moment: per-parameter gradient magnitude (denominator = how much to scale down)</dd>
+    <dt>$\epsilon$</dt>
+    <dd>Tiny constant ($10^{-8}$) to prevent division by zero. Does not affect results in practice</dd>
+  </dl>
   <p style="margin-top: 12px; font-size: 16px;">Compare to plain gradient descent: $\theta_t = \theta_{t-1} - \alpha \cdot g_t$</p>
   <p style="margin-top: 12px; font-size: 16px;">Adam replaces $g_t$ with $\hat{m}_t / (\sqrt{\hat{v}_t} + \epsilon)$. This does two things at once:</p>
   <ul style="margin: 8px 0 0 20px; font-size: 16px;">
@@ -203,22 +221,27 @@
 <div class="iter-header">Iteration 2 ($t = 2$)</div>
 <div class="hand-calc" style="border-color: #64ffda;">
   <div class="step">
-    <p class="step-label">Gradient: $g_2 = 2(4.9) = $ <span class="result">$9.8$</span></p>
+    <p class="step-label">Line 5 -- Gradient: $g_2 = f'(\theta_1) = 2(4.9) = $ <span class="result">$9.8$</span></p>
+    <p style="color:#888; font-size:14px;">Gradient shrank slightly because $\theta$ moved closer to 0</p>
   </div>
   <div class="step">
-    <p class="step-label">Momentum: $m_2 = 0.9(1) + 0.1(9.8) = 0.9 + 0.98 = $ <span class="result">$1.88$</span></p>
+    <p class="step-label">Line 6 -- Momentum: $m_2 = 0.9(1) + 0.1(9.8) = 0.9 + 0.98 = $ <span class="result">$1.88$</span></p>
+    <p style="color:#888; font-size:14px;">Blends 90% of old momentum with 10% of new gradient</p>
   </div>
   <div class="step">
-    <p class="step-label">Scale: $v_2 = 0.999(0.1) + 0.001(9.8^2) = 0.0999 + 0.09604 = $ <span class="result">$0.19594$</span></p>
+    <p class="step-label">Line 7 -- Scale: $v_2 = 0.999(0.1) + 0.001(9.8^2) = 0.0999 + 0.09604 = $ <span class="result">$0.19594$</span></p>
+    <p style="color:#888; font-size:14px;">Second moment grows as it accumulates squared gradient history</p>
   </div>
   <div class="step">
-    <p class="step-label">Correct: $\hat{m}_2 = \frac{1.88}{1 - 0.81} = \frac{1.88}{0.19} = $ <span class="result">$9.895$</span></p>
+    <p class="step-label">Line 8 -- Correct momentum: $\hat{m}_2 = \frac{1.88}{1 - 0.9^2} = \frac{1.88}{0.19} = $ <span class="result">$9.895$</span></p>
+    <p style="color:#888; font-size:14px;">Correction factor $0.19$ is still small, so the boost is still large</p>
   </div>
   <div class="step">
-    <p class="step-label">Correct: $\hat{v}_2 = \frac{0.19594}{1 - 0.999^2} = \frac{0.19594}{0.001999} = $ <span class="result">$98.02$</span></p>
+    <p class="step-label">Line 9 -- Correct scale: $\hat{v}_2 = \frac{0.19594}{1 - 0.999^2} = \frac{0.19594}{0.001999} = $ <span class="result">$98.02$</span></p>
+    <p style="color:#888; font-size:14px;">$\beta_2^2 = 0.998$, so correction factor is still tiny (massive boost)</p>
   </div>
   <div class="step">
-    <p class="step-label">Update: $\theta_2 = 4.9 - 0.1 \times \frac{9.895}{\sqrt{98.02} + 10^{-8}} = 4.9 - 0.1 \times \frac{9.895}{9.901} = 4.9 - 0.0999 = $ <span class="result">$4.8001$</span></p>
+    <p class="step-label">Line 10 -- Update: $\theta_2 = 4.9 - 0.1 \times \frac{9.895}{\sqrt{98.02} + 10^{-8}} = 4.9 - 0.1 \times \frac{9.895}{9.901} = 4.9 - 0.0999 = $ <span class="result">$4.8001$</span></p>
   </div>
   <p class="check">Again, effective step $\approx 0.1$. Adam takes steps of approximately $\alpha$ regardless of gradient size.</p>
 </div>
@@ -226,23 +249,27 @@
 <div class="iter-header">Iteration 3 ($t = 3$)</div>
 <div class="hand-calc" style="border-color: #64ffda;">
   <div class="step">
-    <p class="step-label">Gradient: $g_3 = 2(4.8001) = $ <span class="result">$9.6002$</span></p>
+    <p class="step-label">Line 5 -- Gradient: $g_3 = f'(\theta_2) = 2(4.8001) = $ <span class="result">$9.6002$</span></p>
+    <p style="color:#888; font-size:14px;">Gradient continues to shrink as $\theta$ approaches the minimum at 0</p>
   </div>
   <div class="step">
-    <p class="step-label">Momentum: $m_3 = 0.9(1.88) + 0.1(9.6002) = 1.692 + 0.96002 = $ <span class="result">$2.652$</span></p>
+    <p class="step-label">Line 6 -- Momentum: $m_3 = 0.9(1.88) + 0.1(9.6002) = 1.692 + 0.96002 = $ <span class="result">$2.652$</span></p>
+    <p style="color:#888; font-size:14px;">Raw $m_t$ is still far from the true gradient due to zero-init bias</p>
   </div>
   <div class="step">
-    <p class="step-label">Scale: $v_3 = 0.999(0.19594) + 0.001(9.6002^2) = 0.19574 + 0.09216 = $ <span class="result">$0.28790$</span></p>
+    <p class="step-label">Line 7 -- Scale: $v_3 = 0.999(0.19594) + 0.001(9.6002^2) = 0.19574 + 0.09216 = $ <span class="result">$0.28790$</span></p>
   </div>
   <div class="step">
-    <p class="step-label">Correct: $\hat{m}_3 = \frac{2.652}{1 - 0.9^3} = \frac{2.652}{0.271} = $ <span class="result">$9.786$</span></p>
+    <p class="step-label">Line 8 -- Correct momentum: $\hat{m}_3 = \frac{2.652}{1 - 0.9^3} = \frac{2.652}{0.271} = $ <span class="result">$9.786$</span></p>
+    <p style="color:#888; font-size:14px;">Correction factor $1 - 0.729 = 0.271$, still a meaningful boost</p>
   </div>
   <div class="step">
-    <p class="step-label">Correct: $\hat{v}_3 = \frac{0.28790}{1 - 0.999^3} = \frac{0.28790}{0.002997} = $ <span class="result">$96.06$</span></p>
+    <p class="step-label">Line 9 -- Correct scale: $\hat{v}_3 = \frac{0.28790}{1 - 0.999^3} = \frac{0.28790}{0.002997} = $ <span class="result">$96.06$</span></p>
   </div>
   <div class="step">
-    <p class="step-label">Update: $\theta_3 = 4.8001 - 0.1 \times \frac{9.786}{\sqrt{96.06}} = 4.8001 - 0.1 \times \frac{9.786}{9.801} = 4.8001 - 0.0998 = $ <span class="result">$4.7003$</span></p>
+    <p class="step-label">Line 10 -- Update: $\theta_3 = 4.8001 - 0.1 \times \frac{9.786}{\sqrt{96.06}} = 4.8001 - 0.1 \times \frac{9.786}{9.801} = 4.8001 - 0.0998 = $ <span class="result">$4.7003$</span></p>
   </div>
+  <p class="check">Three iterations in and the pattern is clear: each step is almost exactly $\alpha = 0.1$, confirming the trust region property. The ratio $\hat{m}_t / \sqrt{\hat{v}_t} \approx 1$, so Adam's effective step is bounded by $\alpha$.</p>
 </div>
 
 <table class="step-table">
@@ -267,10 +294,10 @@
 <div class="formula-box" style="text-align: left;">
   <p style="font-size: 18px; margin-bottom: 16px; color: #ffd93d;">The paper's recommended defaults (Section 2):</p>
   <ul style="font-size: 16px; margin-left: 20px;">
-    <li><strong>$\alpha = 0.001$</strong> &mdash; small base step size. Since Adam normalizes each step to $\approx \alpha$, this controls the overall pace. Most ML problems work well with $10^{-3}$ to $10^{-4}$.</li>
-    <li style="margin-top: 8px;"><strong>$\beta_1 = 0.9$</strong> &mdash; momentum decay. Averages roughly the last 10 gradients ($1/(1-0.9) = 10$). Enough to smooth noise without being too sluggish.</li>
-    <li style="margin-top: 8px;"><strong>$\beta_2 = 0.999$</strong> &mdash; scale decay. Averages roughly the last 1000 squared gradients ($1/(1-0.999) = 1000$). Long memory for stable per-parameter scaling.</li>
-    <li style="margin-top: 8px;"><strong>$\epsilon = 10^{-8}$</strong> &mdash; just prevents $0/0$. Doesn't affect results in practice.</li>
+    <li><strong>$\alpha = 0.001$</strong>  -- small base step size. Since Adam normalizes each step to $\approx \alpha$, this controls the overall pace. Most ML problems work well with $10^{-3}$ to $10^{-4}$.</li>
+    <li style="margin-top: 8px;"><strong>$\beta_1 = 0.9$</strong>  -- momentum decay. Averages roughly the last 10 gradients ($1/(1-0.9) = 10$). Enough to smooth noise without being too sluggish.</li>
+    <li style="margin-top: 8px;"><strong>$\beta_2 = 0.999$</strong>  -- scale decay. Averages roughly the last 1000 squared gradients ($1/(1-0.999) = 1000$). Long memory for stable per-parameter scaling.</li>
+    <li style="margin-top: 8px;"><strong>$\epsilon = 10^{-8}$</strong>  -- just prevents $0/0$. Doesn't affect results in practice.</li>
   </ul>
   <p style="margin-top: 16px; font-size: 16px; color: #64ffda;"><strong>Key insight from the paper:</strong> "Good default settings for the tested machine learning problems are $\alpha = 0.001$, $\beta_1 = 0.9$, $\beta_2 = 0.999$ and $\epsilon = 10^{-8}$." These almost never need to be changed.</p>
 </div>
@@ -278,13 +305,13 @@
 <div class="why-box">
   <h3>Comparison to your course methods</h3>
   <p><strong>Gradient descent:</strong> You had to choose $\alpha$ carefully (too big = diverge, too small = crawl). Adam's default $\alpha = 0.001$ works because the adaptive scaling handles the rest.</p>
-  <p style="margin-top: 8px;"><strong>Line search:</strong> Computed $\alpha$ each step, expensive. Adam doesn't need line search &mdash; the second moment handles it.</p>
+  <p style="margin-top: 8px;"><strong>Line search:</strong> Computed $\alpha$ each step, expensive. Adam doesn't need line search  -- the second moment handles it.</p>
   <p style="margin-top: 8px;"><strong>BFGS:</strong> Built an $n \times n$ matrix. Adam stores just two vectors. Same concept (use gradient history to improve steps), radically simpler implementation.</p>
 </div>
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary &mdash; Full Adam</h3>
+  <h3>Glossary  -- Full Adam</h3>
   <dl>
     <dt>Adam</dt>
     <dd><strong>Ada</strong>ptive <strong>M</strong>oment estimation. Combines momentum ($m_t$) + adaptive rates ($v_t$) + bias correction. The name comes from "adaptive moments."</dd>
@@ -301,7 +328,7 @@
 </div>
 
 <a href="concept-13-experiments.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 13 &mdash; The Experiments</p>
+  <p>Next: Page 13  -- The Experiments</p>
   <p>What the paper tested, what the plots show, and why Adam wins</p>
 </div></a>
 

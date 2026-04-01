@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Page 05: Step Size Selection &mdash; From Line Search to Adaptive Methods</title>
+<title>Page 05: Step Size Selection: From Line Search to Adaptive Methods</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
@@ -52,7 +52,7 @@
 <div class="container">
 
 <h1>Page 05: Step Size Selection</h1>
-<p class="subtitle">MATH 3850 &mdash; From line search to adaptive methods: the direct bridge to Adam</p>
+<p class="subtitle">MATH 3850: From line search to adaptive methods, the direct bridge to Adam</p>
 
 <!-- ===================== PART A: EXACT LINE SEARCH ===================== -->
 <span class="tag">PART A</span>
@@ -100,7 +100,7 @@
   <div class="step">
     <p class="step-label">Result:</p>
     <p class="result">$\alpha_0 = 13/35 \approx 0.371$</p>
-    <p style="color:#888; font-size:15px;">This is the optimal step size for this particular gradient and curvature. Not 0.1 or 0.01 &mdash; the exact best value.</p>
+    <p style="color:#888; font-size:15px;">This is the optimal step size for this particular gradient and curvature. Not 0.1 or 0.01; the exact best value.</p>
   </div>
 
   <p class="check">You computed this exact calculation in A2 and Quiz 6. The line search gives a different $\alpha$ each iteration based on the current gradient and curvature.</p>
@@ -118,6 +118,28 @@
   <p style="font-size: 18px; margin-bottom: 12px;">Armijo sufficient decrease condition:</p>
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$f(x_k + \alpha p_k) \leq f(x_k) + c \cdot \alpha \cdot g_k^T p_k$$</p>
   <p style="font-size: 16px; margin-top: 12px;">In English: "the actual decrease must be at least $c$ fraction of the predicted decrease."</p>
+  <dl class="breakdown">
+    <dt>$f(x_k + \alpha p_k)$</dt>
+    <dd>The function value after taking a step of size $\alpha$ in direction $p_k$ (the "actual" new value)</dd>
+    <dt>$x_k$</dt>
+    <dd>The current point (where we are now)</dd>
+    <dt>$\alpha$</dt>
+    <dd>The trial step size; starts at 1 and gets shrunk until the condition passes</dd>
+    <dt>$p_k$</dt>
+    <dd>The search direction; for steepest descent, $p_k = -g_k$ (downhill)</dd>
+    <dt>$f(x_k)$</dt>
+    <dd>The function value at the current point (before stepping)</dd>
+    <dt>$c$</dt>
+    <dd>A small constant (e.g., $10^{-3}$); controls how much decrease we demand. Smaller $c$ = more lenient</dd>
+    <dt>$g_k$</dt>
+    <dd>The gradient $\nabla f(x_k)$; for steepest descent $g_k = f'(x_k)$</dd>
+    <dt>$g_k^T p_k$</dt>
+    <dd>Directional derivative: the predicted rate of decrease along $p_k$. Negative when $p_k$ is a descent direction (which is what we want)</dd>
+    <dt>$c \cdot \alpha \cdot g_k^T p_k$</dt>
+    <dd>The "predicted decrease" scaled by $c$. Since $g_k^T p_k \lt 0$, this whole term is negative, making the right side smaller than $f(x_k)$</dd>
+    <dt>$\eta$</dt>
+    <dd>Shrink factor (e.g., 0.8); when the condition fails, multiply $\alpha$ by $\eta$ to try a smaller step</dd>
+  </dl>
   <p style="font-size: 16px; margin-top: 12px;">Algorithm (from A1):</p>
   <ol style="margin: 8px 0 0 20px; font-size: 16px;">
     <li>Start with $\alpha = 1$</li>
@@ -130,13 +152,14 @@
 
 <div class="hand-calc">
   <h3>Hand Computation: One Armijo Backtrack</h3>
-  <p>$f(x) = x^2$, $x_k = 5$, $g_k = 10$, $p_k = -10$ (steepest descent direction)</p>
+  <p style="font-size: 15px; color: #ccc; margin-bottom: 8px;">We walk through the Armijo backtracking procedure step by step. The gradient at $x_k = 5$ is $g_k = f'(5) = 2(5) = 10$ (the slope is steep and positive, so we need to go left). The search direction is $p_k = -g_k = -10$ (downhill). We try $\alpha = 1$ first and check if the function decreased "enough."</p>
+  <p>$f(x) = x^2$, $x_k = 5$, $g_k = 10$, $p_k = -10$ (steepest descent direction), $c = 0.001$</p>
 
   <div class="step">
     <p class="step-label">Try $\alpha = 1$:</p>
     <p>$f(5 + 1 \cdot (-10)) = f(-5) = 25$</p>
     <p>Check: $25 \leq f(5) + 0.001 \cdot 1 \cdot (10)(-10) = 25 + 0.001(-100) = 25 - 0.1 = 24.9$</p>
-    <p>$25 \leq 24.9$? <span style="color:#ff6b6b; font-weight:bold;">NO</span> &mdash; we overshot! (Landed at same height on the other side)</p>
+    <p>$25 \leq 24.9$? <span style="color:#ff6b6b; font-weight:bold;">NO</span>; we overshot! (Landed at same height on the other side)</p>
   </div>
   <div class="step">
     <p class="step-label">Shrink: $\alpha = 0.8 \cdot 1 = 0.8$</p>
@@ -147,6 +170,42 @@
   </div>
 
   <p class="check">The Armijo condition is a safety check: "did the function actually decrease enough?" It prevents the overshooting problem from Page 03.</p>
+</div>
+
+<div style="margin: 24px 0; text-align: center;">
+  <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 600px; width: 100%;">
+    <text x="300" y="20" text-anchor="middle" fill="#bb86fc" font-size="15" font-weight="bold">Armijo Condition: $\phi(\alpha) = f(x_k + \alpha p_k)$</text>
+    <!-- Axes -->
+    <line x1="60" y1="280" x2="560" y2="280" stroke="#555" stroke-width="1"/>
+    <line x1="60" y1="280" x2="60" y2="40" stroke="#555" stroke-width="1"/>
+    <text x="310" y="305" text-anchor="middle" fill="#888" font-size="13">$\alpha$ (step size)</text>
+    <text x="30" y="160" text-anchor="middle" fill="#888" font-size="13" transform="rotate(-90,30,160)">$f$ value</text>
+    <!-- f(x_k) level -->
+    <text x="50" y="78" text-anchor="end" fill="#ffd93d" font-size="12">$f(x_k)$</text>
+    <line x1="60" y1="80" x2="560" y2="80" stroke="#ffd93d" stroke-width="1" stroke-dasharray="4,4"/>
+    <!-- phi(alpha) curve: starts at f(x_k), dips down, comes back up -->
+    <path d="M 60,80 Q 150,250 250,200 Q 350,160 450,240 Q 520,280 560,290" fill="none" stroke="#64ffda" stroke-width="2.5"/>
+    <text x="480" y="260" fill="#64ffda" font-size="12">$\phi(\alpha)$ (actual)</text>
+    <!-- Armijo line: f(x_k) + c * alpha * g^T p (a line with slight negative slope) -->
+    <line x1="60" y1="80" x2="560" y2="70" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="480" y="60" fill="#ff6b6b" font-size="12">Armijo line</text>
+    <text x="480" y="48" fill="#888" font-size="10">$f(x_k) + c \alpha g_k^T p_k$</text>
+    <!-- Alpha = 1 marker (fail) -->
+    <line x1="420" y1="275" x2="420" y2="230" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <circle cx="420" cy="235" r="5" fill="#ff6b6b"/>
+    <text x="420" y="298" text-anchor="middle" fill="#ff6b6b" font-size="11">$\alpha = 1$ (fail)</text>
+    <!-- Alpha = 0.8 marker (pass) -->
+    <line x1="340" y1="275" x2="340" y2="165" stroke="#64ffda" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <circle cx="340" cy="170" r="5" fill="#64ffda"/>
+    <text x="340" y="298" text-anchor="middle" fill="#64ffda" font-size="11">$\alpha = 0.8$ (pass)</text>
+    <!-- Optimal alpha marker -->
+    <circle cx="200" cy="215" r="5" fill="#ffd93d"/>
+    <text x="200" y="210" text-anchor="middle" fill="#ffd93d" font-size="11">optimal $\alpha$</text>
+    <!-- Shaded "acceptable" region label -->
+    <text x="170" y="55" fill="#888" font-size="11">Acceptable region:</text>
+    <text x="170" y="67" fill="#888" font-size="11">$\phi(\alpha)$ below Armijo line</text>
+  </svg>
+  <p style="font-size: 14px; color: #888; margin-top: 8px;">The Armijo line slopes gently downward from $f(x_k)$. We accept any $\alpha$ where the actual function value (teal curve) is below this line. $\alpha = 1$ overshoots (teal curve above the line), so we shrink to $\alpha = 0.8$ which passes.</p>
 </div>
 
 <!-- ===================== PART C: THE PROBLEM WITH ALL OF THIS ===================== -->
@@ -196,7 +255,7 @@
 <h2>The Adaptive Idea: Each Parameter Gets Its Own Step Size</h2>
 
 <div class="analogy">
-  <p><strong>Analogy: Instead of one thermostat for the whole building, each room gets its own thermostat.</strong> The server room needs to be cold. The lobby needs to be warm. One setting can't work for both &mdash; you need per-room control.</p>
+  <p><strong>Analogy: Instead of one thermostat for the whole building, each room gets its own thermostat.</strong> The server room needs to be cold. The lobby needs to be warm. One setting can't work for both; you need per-room control.</p>
   <p style="margin-top: 8px;">Adam gives each parameter its own "thermostat" (step size), automatically adjusted based on how that parameter's gradient has been behaving.</p>
 </div>
 
@@ -211,6 +270,18 @@
   </ul>
   <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;"><strong>The effective step size for parameter $i$:</strong></p>
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$\alpha_i^{\text{effective}} = \frac{\alpha}{\sqrt{\hat{v}_{t,i}} + \epsilon}$$</p>
+  <dl class="breakdown">
+    <dt>$\alpha_i^{\text{effective}}$</dt>
+    <dd>The actual step size used for parameter $i$; different for each parameter</dd>
+    <dt>$\alpha$</dt>
+    <dd>The global learning rate (e.g., 0.001); a baseline that gets adjusted per-parameter</dd>
+    <dt>$\hat{v}_{t,i}$</dt>
+    <dd>Bias-corrected second moment estimate for parameter $i$; roughly the running average of squared gradients</dd>
+    <dt>$\sqrt{\hat{v}_{t,i}}$</dt>
+    <dd>Scales the step: large past gradients produce a large denominator, shrinking the step. Small past gradients produce a small denominator, enlarging the step</dd>
+    <dt>$\epsilon$</dt>
+    <dd>A tiny constant (e.g., $10^{-8}$) to prevent division by zero when $\hat{v}$ is near zero</dd>
+  </dl>
   <p style="font-size: 16px;">Each parameter $i$ gets its own denominator $\sqrt{\hat{v}_{t,i}}$, so each gets its own effective step size. No line search needed. No matrix storage needed. Just two running averages.</p>
 </div>
 
@@ -218,13 +289,13 @@
   <strong>Summary of the journey so far:</strong><br>
   Pages 00-02: Foundations (derivatives, gradients, convexity)<br>
   Pages 03-04: GD is slow, Newton/BFGS use curvature to go faster but are expensive<br>
-  Page 05 (here): Even line search gives only one $\alpha$ for all params &mdash; Adam solves this<br><br>
-  <strong>Next up (Pages 06-08):</strong> The ML setting &mdash; stochastic gradients, what we're actually optimizing, and the two problems Adam solves. Then Pages 09-12: Adam itself.
+  Page 05 (here): Even line search gives only one $\alpha$ for all params; Adam solves this<br><br>
+  <strong>Next up (Pages 06-08):</strong> The ML setting: stochastic gradients, what we're actually optimizing, and the two problems Adam solves. Then Pages 09-12: Adam itself.
 </div>
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary &mdash; Step Size Selection</h3>
+  <h3>Glossary: Step Size Selection</h3>
   <dl>
     <dt>Exact line search</dt>
     <dd>Find the optimal $\alpha$ by calculus. Formula: $\alpha = g^Tg / g^TQg$ for quadratics.</dd>
@@ -244,7 +315,7 @@
 </div>
 
 <a href="concept-06-sgd.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 06 &mdash; Stochastic Gradient Descent</p>
+  <p>Next: Page 06: Stochastic Gradient Descent</p>
   <p>What changes when you can only see a random sample of the data?</p>
 </div></a>
 

@@ -91,7 +91,7 @@
   <div class="step">
     <p class="step-label">The pattern:</p>
     <p>$x_{k+1} = x_k(1 - 2\alpha) = x_k(1 - 1.8) = -0.8 \cdot x_k$</p>
-    <p style="color:#888; font-size:15px;">The factor is $-0.8$: the sign flips each step (bouncing) and $|{-0.8}| < 1$ (slowly shrinking). If $\alpha > 1$, the factor $> 1$ and it blows up!</p>
+    <p style="color:#888; font-size:15px;">The factor is $-0.8$: the sign flips each step (bouncing) and $|{-0.8}| \lt 1$ (slowly shrinking). If $\alpha \gt 1$, the factor $\gt 1$ and it blows up!</p>
   </div>
   <p class="check">This is why your Assignment 1 used Armijo line search to pick $\alpha$ &mdash; it guarantees the step size isn't too big.</p>
 </div>
@@ -254,7 +254,7 @@
   <h3>Glossary &mdash; Gradient Descent</h3>
   <dl>
     <dt>Step size / Learning rate ($\alpha$)</dt>
-    <dd>How far you step each iteration. Too small = slow. Too big = bounce/diverge. Must be $< 2/\lambda_{\max}$.</dd>
+    <dd>How far you step each iteration. Too small = slow. Too big = bounce/diverge. Must be $\lt 2/\lambda_{\max}$.</dd>
 
     <dt>Linear convergence</dt>
     <dd>Error shrinks by a constant ratio each step. Straight line on log scale. GD achieves this.</dd>

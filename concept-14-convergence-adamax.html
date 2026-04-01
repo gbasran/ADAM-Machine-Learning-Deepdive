@@ -38,13 +38,17 @@
   .timeline-desc strong { color: #64ffda; }
   .final-box { background: linear-gradient(135deg, #0f3460, #0a2e1a); border: 3px solid #ffd93d; border-radius: 16px; padding: 32px; margin: 40px 0; text-align: center; }
   .final-box h2 { color: #ffd93d; margin-bottom: 20px; font-size: 24px; }
+  .breakdown { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 16px 0; font-size: 16px; }
+  .breakdown dt { color: #64ffda; text-align: right; font-weight: bold; }
+  .breakdown dd { color: #ccc; }
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
 </style>
 </head>
 <body>
 <div class="container">
 
 <h1>Page 14: Convergence, AdaMax, and the Big Picture</h1>
-<p class="subtitle">MATH 3850 &mdash; Adam Paper, Sections 4 &amp; 7 &mdash; What theory guarantees, the infinity-norm variant, and where Adam fits in optimization</p>
+<p class="subtitle">MATH 3850  -- Adam Paper, Sections 4 &amp; 7  -- What theory guarantees, the infinity-norm variant, and where Adam fits in optimization</p>
 
 <!-- ===================== PART A: REGRET ===================== -->
 <span class="tag">PART A</span>
@@ -53,18 +57,24 @@
 <div class="analogy">
   <p><strong>Analogy: A poker player's regret.</strong></p>
   <p>Imagine you play poker 1,000 hands. After seeing all the results, you compute: "if I had played the single best fixed strategy for ALL hands, how much more would I have won?" That gap is your <strong>regret</strong>.</p>
-  <p style="margin-top: 8px;">If your regret grows slowly (sublinearly) &mdash; say it doubles when the number of hands quadruples &mdash; then your <em>average</em> regret per hand goes to zero. You're approaching the best fixed strategy without knowing it in advance.</p>
+  <p style="margin-top: 8px;">If your regret grows slowly (sublinearly)  -- say it doubles when the number of hands quadruples  -- then your <em>average</em> regret per hand goes to zero. You're approaching the best fixed strategy without knowing it in advance.</p>
 </div>
 
 <div class="formula-box" style="text-align: left;">
   <p style="font-size: 18px; margin-bottom: 12px;"><strong>Regret</strong> (paper's Definition, Section 4):</p>
   <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$R(T) = \sum_{t=1}^{T} [f_t(\theta_t) - f_t(\theta^*)]$$</p>
-  <p style="font-size: 16px;">Breaking this down:</p>
-  <ul style="margin: 8px 0 0 20px; font-size: 16px;">
-    <li>$f_t(\theta_t)$ = the loss Adam achieved at step $t$ with its chosen $\theta_t$</li>
-    <li>$f_t(\theta^*)$ = the loss the <strong>best possible fixed</strong> $\theta^*$ would have achieved</li>
-    <li>$R(T)$ = total accumulated gap over $T$ steps</li>
-  </ul>
+  <dl class="breakdown">
+    <dt>$R(T)$</dt>
+    <dd>Total regret after $T$ steps. The cumulative gap between Adam's actual performance and the best possible fixed strategy</dd>
+    <dt>$T$</dt>
+    <dd>Total number of optimization steps (iterations). More steps = more chances for regret to accumulate</dd>
+    <dt>$f_t(\theta_t)$</dt>
+    <dd>The loss at step $t$ using the parameters Adam chose. This is what actually happened</dd>
+    <dt>$f_t(\theta^*)$</dt>
+    <dd>The loss at step $t$ if we had used the single best fixed $\theta^*$ (known only in hindsight)</dd>
+    <dt>$\sum_{t=1}^{T}$</dt>
+    <dd>Sum over all $T$ steps. Each step contributes a gap $f_t(\theta_t) - f_t(\theta^*)$ which is always $\geq 0$</dd>
+  </dl>
   <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;">If $R(T)$ grows slowly, Adam is doing well — it's not falling far behind the optimal choice.</p>
 </div>
 
@@ -72,6 +82,14 @@
   <h3>What does the paper prove? (Theorem 4.1 and Corollary 4.2)</h3>
   <p style="font-size: 16px;">Under certain assumptions (bounded gradients, convex losses):</p>
   <p style="text-align: center; font-size: 22px; margin: 16px 0; color: #64ffda;">$$\frac{R(T)}{T} = O\!\left(\frac{1}{\sqrt{T}}\right)$$</p>
+  <dl class="breakdown">
+    <dt>$R(T)/T$</dt>
+    <dd>Average regret per step. If this goes to zero, Adam is approaching optimal performance on average</dd>
+    <dt>$O(\cdot)$</dt>
+    <dd>Big-O notation: "grows no faster than." Hides constant factors to focus on the rate of growth</dd>
+    <dt>$1/\sqrt{T}$</dt>
+    <dd>The convergence rate. Doubling accuracy requires 4x more steps (square root). Slow growth of regret is good for us</dd>
+  </dl>
   <p style="font-size: 16px;">In plain English: <strong>the average regret per step goes to zero</strong> as you take more steps. After 10,000 steps, your average loss is within $1/\sqrt{10000} = 1/100$ of optimal. After a million steps: within $1/1000$ of optimal.</p>
   <p style="margin-top: 12px; font-size: 16px;">This matches the <strong>best known rate</strong> for any online convex optimization method. Adam isn't just good in practice — it has provably competitive convergence.</p>
 </div>
@@ -89,7 +107,7 @@
   </div>
   <div class="step">
     <p class="step-label">After $T = 1{,}000{,}000$ steps:</p>
-    <p>Average regret $\leq C / 1000$ &mdash; practically zero.</p>
+    <p>Average regret $\leq C / 1000$  -- practically zero.</p>
   </div>
   <p style="color: #ffd93d; font-style: italic; margin-top: 12px;">Connection to your course: this is like convergence rate analysis from Page 03, but for the online/stochastic setting. Instead of "distance to minimum shrinks," it's "average regret shrinks." Same spirit, different framework.</p>
 </div>
@@ -112,6 +130,17 @@
 
   <p style="font-size: 18px; margin: 20px 0 12px 0;">AdaMax's second moment (L&infin; norm):</p>
   <p style="margin: 8px 0;">$u_t = \max(\beta_2 \cdot u_{t-1},\; |g_t|)$ &nbsp; (maximum of absolutes)</p>
+
+  <dl class="breakdown">
+    <dt>$u_t$</dt>
+    <dd>AdaMax's second moment at step $t$. Tracks the exponentially-decaying maximum of gradient magnitudes (not the average)</dd>
+    <dt>$\beta_2 \cdot u_{t-1}$</dt>
+    <dd>Previous max, slightly decayed. The $\beta_2$ factor lets old large gradients gradually fade</dd>
+    <dt>$|g_t|$</dt>
+    <dd>Absolute value of the current gradient. If this exceeds the decayed history, it becomes the new max</dd>
+    <dt>$\max(\cdot, \cdot)$</dt>
+    <dd>Take the larger of the two. This is the L-infinity norm operation: dominated by the single biggest value</dd>
+  </dl>
 
   <p style="margin-top: 20px; font-size: 16px;">The update becomes:</p>
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$\theta_t = \theta_{t-1} - \frac{\alpha}{1 - \beta_1^t} \cdot \frac{m_t}{u_t}$$</p>
@@ -183,6 +212,62 @@
   </div>
 </div>
 
+<svg viewBox="0 0 800 200" style="width:100%; margin: 20px 0;">
+  <!-- Main timeline line -->
+  <line x1="30" y1="100" x2="770" y2="100" stroke="#444" stroke-width="3"/>
+
+  <!-- GD 1847 -->
+  <circle cx="60" cy="100" r="8" fill="#1a1a2e" stroke="#888" stroke-width="2"/>
+  <text x="60" y="80" text-anchor="middle" fill="#888" font-size="10">1847</text>
+  <text x="60" y="130" text-anchor="middle" fill="#ccc" font-size="10" font-weight="bold">GD</text>
+  <text x="60" y="145" text-anchor="middle" fill="#666" font-size="8">fixed step</text>
+
+  <!-- Newton 1687/1970s -->
+  <circle cx="170" cy="100" r="8" fill="#1a1a2e" stroke="#888" stroke-width="2"/>
+  <text x="170" y="80" text-anchor="middle" fill="#888" font-size="10">~1970</text>
+  <text x="170" y="130" text-anchor="middle" fill="#ccc" font-size="10" font-weight="bold">Newton</text>
+  <text x="170" y="145" text-anchor="middle" fill="#666" font-size="8">uses Hessian</text>
+  <text x="170" y="158" text-anchor="middle" fill="#666" font-size="8">O(n^2) storage</text>
+
+  <!-- BFGS -->
+  <circle cx="280" cy="100" r="8" fill="#1a1a2e" stroke="#bb86fc" stroke-width="2"/>
+  <text x="280" y="80" text-anchor="middle" fill="#888" font-size="10">1970</text>
+  <text x="280" y="130" text-anchor="middle" fill="#bb86fc" font-size="10" font-weight="bold">BFGS</text>
+  <text x="280" y="145" text-anchor="middle" fill="#666" font-size="8">approx Newton</text>
+  <text x="280" y="158" text-anchor="middle" fill="#666" font-size="8">still O(n^2)</text>
+
+  <!-- AdaGrad -->
+  <circle cx="430" cy="100" r="8" fill="#1a1a2e" stroke="#bb86fc" stroke-width="2"/>
+  <text x="430" y="80" text-anchor="middle" fill="#888" font-size="10">2011</text>
+  <text x="430" y="130" text-anchor="middle" fill="#bb86fc" font-size="10" font-weight="bold">AdaGrad</text>
+  <text x="430" y="145" text-anchor="middle" fill="#666" font-size="8">per-param rates</text>
+  <text x="430" y="158" text-anchor="middle" fill="#666" font-size="8">shrinks to 0</text>
+
+  <!-- RMSProp -->
+  <circle cx="550" cy="100" r="8" fill="#1a1a2e" stroke="#ff6b6b" stroke-width="2"/>
+  <text x="550" y="80" text-anchor="middle" fill="#888" font-size="10">2012</text>
+  <text x="550" y="130" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="bold">RMSProp</text>
+  <text x="550" y="145" text-anchor="middle" fill="#666" font-size="8">decaying avg</text>
+  <text x="550" y="158" text-anchor="middle" fill="#666" font-size="8">no bias fix</text>
+
+  <!-- Adam (highlighted) -->
+  <circle cx="700" cy="100" r="14" fill="#0a2e1a" stroke="#64ffda" stroke-width="3"/>
+  <text x="700" y="104" text-anchor="middle" fill="#64ffda" font-size="11" font-weight="bold">A</text>
+  <text x="700" y="75" text-anchor="middle" fill="#ffd93d" font-size="12" font-weight="bold">2015</text>
+  <text x="700" y="130" text-anchor="middle" fill="#ffd93d" font-size="11" font-weight="bold">Adam</text>
+  <text x="700" y="145" text-anchor="middle" fill="#64ffda" font-size="8">momentum + adaptive</text>
+  <text x="700" y="158" text-anchor="middle" fill="#64ffda" font-size="8">+ bias correction</text>
+  <text x="700" y="171" text-anchor="middle" fill="#64ffda" font-size="8">O(n) storage</text>
+
+  <!-- Arrows showing inheritance -->
+  <path d="M 170 92 Q 300 50 430 92" fill="none" stroke="#bb86fc" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="300" y="55" text-anchor="middle" fill="#bb86fc" font-size="8">per-param idea</text>
+  <path d="M 430 92 Q 490 70 550 92" fill="none" stroke="#ff6b6b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="490" y="72" text-anchor="middle" fill="#ff6b6b" font-size="8">fix decay</text>
+  <path d="M 550 92 Q 625 60 695 88" fill="none" stroke="#64ffda" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="625" y="58" text-anchor="middle" fill="#64ffda" font-size="8">+ momentum + bias fix</text>
+</svg>
+
 <div class="note">
   <strong>Adam is the synthesis.</strong> It takes the best ideas from decades of optimization research and combines them into one clean, efficient, practical algorithm. That's why it became the default optimizer in ML frameworks like PyTorch and TensorFlow.
 </div>
@@ -203,7 +288,7 @@
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary &mdash; Convergence and AdaMax</h3>
+  <h3>Glossary  -- Convergence and AdaMax</h3>
   <dl>
     <dt>Regret $R(T)$</dt>
     <dd>Total accumulated gap between Adam's choices and the best fixed choice in hindsight. Lower regret = closer to optimal.</dd>
