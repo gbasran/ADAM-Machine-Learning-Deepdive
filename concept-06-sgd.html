@@ -55,7 +55,7 @@
 <div class="container">
 
 <h1>Page 06: Stochastic Gradient Descent</h1>
-<p class="subtitle">MATH 3850 -- What changes when your data is too big to look at all at once</p>
+<p class="subtitle">MATH 3850; What changes when your data is too big to look at all at once</p>
 
 <!-- ===================== PART A: THE PROBLEM ===================== -->
 <span class="tag">PART A</span>
@@ -90,14 +90,14 @@
       <dt>$\nabla f_i(\theta)$</dt>
       <dd>Gradient contribution from a single data point $i$</dd>
       <dt>$\frac{1}{N}\sum$</dt>
-      <dd>Average over all data points -- every single one gets used each step</dd>
+      <dd>Average over all data points; every single one gets used each step</dd>
     </dl>
   </div>
   <div class="vs-card" style="border-top: 4px solid #ff6b6b;">
     <h3 style="color: #ff6b6b;">Stochastic Gradient Descent (the paper)</h3>
     <ul>
       <li>Look at a <strong>random batch</strong> (128 points)</li>
-      <li>Approximate direction -- noisy but close</li>
+      <li>Approximate direction; noisy but close</li>
       <li>Zigzaggy path, but still gets there</li>
       <li>Fast per step</li>
     </ul>
@@ -105,7 +105,7 @@
     <p style="text-align: center; font-size: 13px; color: #888;">gradient from just one random batch</p>
     <dl class="breakdown">
       <dt>$g_t$</dt>
-      <dd>The stochastic gradient at timestep $t$ -- a noisy estimate of the true gradient</dd>
+      <dd>The stochastic gradient at timestep $t$; a noisy estimate of the true gradient</dd>
       <dt>$f_t$</dt>
       <dd>Loss evaluated on minibatch $t$ (a random subset, e.g., 128 images out of 60,000)</dd>
       <dt>$\theta$</dt>
@@ -181,7 +181,7 @@
 </div>
 <div class="note">
   <strong>Both plots:</strong> Start at yellow square (top right), trying to reach the star (center = minimum).<br><br>
-  <strong>Left (Exact GD):</strong> Each green dot is one step. Path is smooth and direct. This is what you've been doing in class -- using the full dataset every step.<br><br>
+  <strong>Left (Exact GD):</strong> Each green dot is one step. Path is smooth and direct. This is what you've been doing in class; using the full dataset every step.<br><br>
   <strong>Right (SGD):</strong> Each red dot is one step. Path zigzags because each step uses a <em>random batch</em>, so the gradient direction is noisy. Still reaches the minimum, but wastes movement going side-to-side.
 </div>
 
@@ -247,13 +247,13 @@
   <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$g_t = \nabla_\theta f_t(\theta_{t-1})$$</p>
   <dl class="breakdown">
     <dt>$g_t$</dt>
-    <dd>The stochastic gradient vector at timestep $t$ -- one number per parameter</dd>
+    <dd>The stochastic gradient vector at timestep $t$; one number per parameter</dd>
     <dt>$\nabla_\theta$</dt>
     <dd>"Take partial derivatives with respect to every parameter in $\theta$"</dd>
     <dt>$f_t$</dt>
-    <dd>Loss function on minibatch $t$ -- a different random subset of data each step (this subscript $t$ is what makes it stochastic)</dd>
+    <dd>Loss function on minibatch $t$; a different random subset of data each step (this subscript $t$ is what makes it stochastic)</dd>
     <dt>$\theta_{t-1}$</dt>
-    <dd>Parameter values from the previous step -- we evaluate the gradient at where we currently are</dd>
+    <dd>Parameter values from the previous step; we evaluate the gradient at where we currently are</dd>
   </dl>
   <p style="margin-top: 16px; font-size: 16px; color: #ffd93d;">The subscript $t$ on $f_t$ is crucial: it means each step uses a <strong>different random batch</strong>. That's what makes it stochastic. In your course, $f$ was always the same function. Here, $f_t$ changes every step because the data sample changes.</p>
 </div>
@@ -261,12 +261,12 @@
 <div class="why-box">
   <h3>Connection to your course</h3>
   <p>In your assignments, $f(x) = \frac{1}{2}x^TQx$ was a fixed function. You computed $\nabla f(x_k) = Qx_k$ using the <em>entire</em> function.</p>
-  <p style="margin-top: 8px;">In the Adam paper, $f_t(\theta)$ is the loss on a <em>random batch</em>. The gradient $g_t$ is noisier but cheaper. Everything else (the update rule, the step, the convergence) works the same way -- just with a noisy gradient instead of an exact one.</p>
+  <p style="margin-top: 8px;">In the Adam paper, $f_t(\theta)$ is the loss on a <em>random batch</em>. The gradient $g_t$ is noisier but cheaper. Everything else (the update rule, the step, the convergence) works the same way; just with a noisy gradient instead of an exact one.</p>
 </div>
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary -- Stochastic Gradient Descent</h3>
+  <h3>Glossary; Stochastic Gradient Descent</h3>
   <dl>
     <dt>Stochastic</dt>
     <dd>"Random." The gradient is computed from a random sample of data instead of the full dataset.</dd>
@@ -295,7 +295,7 @@
 </div>
 
 <a href="concept-07-ml-basics.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 07 -- Machine Learning Basics</p>
+  <p>Next: Page 07; Machine Learning Basics</p>
   <p>What are we actually optimizing? Loss functions, parameters, MNIST, and logistic regression</p>
 </div></a>
 

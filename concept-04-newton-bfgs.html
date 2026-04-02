@@ -53,7 +53,7 @@
 <div class="container">
 
 <h1>Page 04: Newton's Method and BFGS</h1>
-<p class="subtitle">MATH 3850 &mdash; Using curvature and gradient history to take smarter steps</p>
+<p class="subtitle">MATH 3850; Using curvature and gradient history to take smarter steps</p>
 
 <!-- ===================== PART A: THE HESSIAN ===================== -->
 <span class="tag">PART A</span>
@@ -94,8 +94,8 @@
       <circle cx="-40" cy="15" r="4" fill="#ffd93d"/>
       <!-- Big step arrow -->
       <line x1="-40" y1="25" x2="40" y2="-25" stroke="#bb86fc" stroke-width="2" marker-end="url(#arrow4)"/>
-      <text x="10" y="-30" fill="#bb86fc" font-size="11">big step OK</text>
-      <text x="0" y="95" text-anchor="middle" fill="#888" font-size="12">Gentle hill: safe to take big steps</text>
+      <text x="10" y="-30" fill="#bb86fc" font-size="13">big step OK</text>
+      <text x="0" y="95" text-anchor="middle" fill="#aaa" font-size="14">Gentle hill: safe to take big steps</text>
     </g>
     <!-- High curvature (right) -->
     <g transform="translate(520,130)">
@@ -107,8 +107,8 @@
       <circle cx="-45" cy="25" r="4" fill="#ffd93d"/>
       <!-- Small step arrow -->
       <line x1="-45" y1="35" x2="-20" y2="0" stroke="#bb86fc" stroke-width="2" marker-end="url(#arrow4)"/>
-      <text x="-10" y="-5" fill="#bb86fc" font-size="11">tiny step</text>
-      <text x="0" y="105" text-anchor="middle" fill="#888" font-size="12">Steep curve: must take small steps</text>
+      <text x="-10" y="-5" fill="#bb86fc" font-size="13">tiny step</text>
+      <text x="0" y="105" text-anchor="middle" fill="#aaa" font-size="14">Steep curve: must take small steps</text>
     </g>
     <defs>
       <marker id="arrow4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
@@ -125,7 +125,7 @@
 
 <div class="analogy">
   <p><strong>Analogy: Instead of just feeling the slope (GD), you build a little bowl-shaped model of the ground around your feet, then jump to the bottom of THAT bowl.</strong></p>
-  <p style="margin-top: 8px;">If the model is accurate, you land at (or very near) the actual minimum. That's why Newton converges so much faster &mdash; each step is carefully calculated, not just "walk downhill with a fixed stride."</p>
+  <p style="margin-top: 8px;">If the model is accurate, you land at (or very near) the actual minimum. That's why Newton converges so much faster; each step is carefully calculated, not just "walk downhill with a fixed stride."</p>
 </div>
 
 <div class="formula-box" style="text-align: left;">
@@ -171,7 +171,7 @@
   <div class="step">
     <p class="step-label">Step 2: Compute Hessian $B_0 = \nabla^2 f(x_0)$</p>
     <p class="result">$B_0 = \begin{bmatrix}2 & 0 \\ 0 & 6\end{bmatrix}$</p>
-    <p style="color:#888; font-size:15px;">(For quadratics, the Hessian is constant &mdash; doesn't depend on $x_0$)</p>
+    <p style="color:#888; font-size:15px;">(For quadratics, the Hessian is constant; doesn't depend on $x_0$)</p>
   </div>
 
   <div class="step">
@@ -191,7 +191,7 @@
     <p style="color:#64ffda; font-size:16px; font-weight:bold;">Converged in ONE step! That's quadratic convergence on a quadratic function.</p>
   </div>
 
-  <p class="check">Compare to GD: with $\alpha = 0.3$, $x_1 = [4,2] - 0.3[8,12] = [1.6, -1.6]$ &mdash; not even close to $[0,0]$. Newton used the curvature to pick the perfect step size in each direction.</p>
+  <p class="check">Compare to GD: with $\alpha = 0.3$, $x_1 = [4,2] - 0.3[8,12] = [1.6, -1.6]$; not even close to $[0,0]$. Newton used the curvature to pick the perfect step size in each direction.</p>
 </div>
 
 <!-- ===================== PART C: BFGS ===================== -->
@@ -235,7 +235,7 @@
   </div>
   <div class="step">
     <p class="step-label">Search direction: $p_0 = -H_0 g_0 = -I \begin{bmatrix}2\\3\end{bmatrix} = \begin{bmatrix}-2\\-3\end{bmatrix}$</p>
-    <p style="color:#888; font-size:15px;">(With $H_0 = I$, this is just steepest descent &mdash; same as GD)</p>
+    <p style="color:#888; font-size:15px;">(With $H_0 = I$, this is just steepest descent; same as GD)</p>
   </div>
   <div class="step">
     <p class="step-label">Exact line search: $\alpha_0 = \frac{g_0^T g_0}{g_0^T Q g_0}$</p>
@@ -248,7 +248,7 @@
   </div>
   <div class="step">
     <p class="step-label">Secant quantities: $s_0 = x_1 - x_0$, $y_0 = g_1 - g_0$</p>
-    <p>Then apply the BFGS update formula to get $H_1$ &mdash; a better approximation to $Q^{-1}$.</p>
+    <p>Then apply the BFGS update formula to get $H_1$; a better approximation to $Q^{-1}$.</p>
   </div>
 
   <p class="check">Notice: BFGS starts as GD (since $H_0 = I$) but gets better each iteration as $H_k$ improves. By the time it converges, $H_k \approx Q^{-1}$ and each step is Newton-like.</p>
@@ -259,9 +259,9 @@
 </div>
 <div class="note">
   <strong>How to read this:</strong> Log scale = each horizontal grid line is 10x smaller. A straight line = linear convergence. A curve that gets steeper = superlinear. A near-vertical drop = quadratic.<br><br>
-  <span style="color:#ff6b6b;">Red (GD):</span> Straight line &mdash; linear, slow and steady.<br>
-  <span style="color:#ffd93d;">Yellow (BFGS):</span> Starts like GD but accelerates &mdash; superlinear.<br>
-  <span style="color:#64ffda;">Green (Newton):</span> Drops like a rock &mdash; quadratic, done in ~10 steps.<br><br>
+  <span style="color:#ff6b6b;">Red (GD):</span> Straight line; linear, slow and steady.<br>
+  <span style="color:#ffd93d;">Yellow (BFGS):</span> Starts like GD but accelerates; superlinear.<br>
+  <span style="color:#64ffda;">Green (Newton):</span> Drops like a rock; quadratic, done in ~10 steps.<br><br>
   In your Assignment 1: GD took 22 iterations, Newton took 10. BFGS would be in between.
 </div>
 
@@ -305,17 +305,17 @@
     </div>
   </div>
 
-  <p style="margin-top: 16px; font-size: 16px;"><strong>The key insight:</strong> BFGS and Adam both use gradient history to adapt step sizes. BFGS stores a full matrix ($n^2$ numbers). Adam stores just two vectors ($2n$ numbers). For MNIST with $n = 784$: BFGS needs 614,656 numbers. Adam needs 1,568. That's the tradeoff &mdash; Adam is less precise but massively cheaper.</p>
+  <p style="margin-top: 16px; font-size: 16px;"><strong>The key insight:</strong> BFGS and Adam both use gradient history to adapt step sizes. BFGS stores a full matrix ($n^2$ numbers). Adam stores just two vectors ($2n$ numbers). For MNIST with $n = 784$: BFGS needs 614,656 numbers. Adam needs 1,568. That's the tradeoff; Adam is less precise but massively cheaper.</p>
 
   <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;"><strong>BFGS uses gradient history to build a matrix.</strong> Adam uses gradient history to build two running averages (momentum $m_t$ and scale $v_t$). Same spirit, different implementation.</p>
 </div>
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary &mdash; Newton and BFGS</h3>
+  <h3>Glossary; Newton and BFGS</h3>
   <dl>
     <dt>Hessian ($\nabla^2 f$)</dt>
-    <dd>Matrix of second derivatives. Tells you curvature &mdash; how fast the slope is changing in each direction.</dd>
+    <dd>Matrix of second derivatives. Tells you curvature; how fast the slope is changing in each direction.</dd>
 
     <dt>Newton's method</dt>
     <dd>$p = -[\nabla^2 f]^{-1} g$. Uses exact curvature to pick perfect step. Quadratic convergence. Expensive.</dd>
@@ -335,8 +335,8 @@
 </div>
 
 <a href="concept-05-step-size-selection.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 05 &mdash; Step Size Selection</p>
-  <p>From line search to adaptive methods &mdash; the direct bridge to Adam</p>
+  <p>Next: Page 05; Step Size Selection</p>
+  <p>From line search to adaptive methods; the direct bridge to Adam</p>
 </div></a>
 
 </div>

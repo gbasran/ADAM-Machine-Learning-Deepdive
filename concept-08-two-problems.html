@@ -50,10 +50,10 @@
 <div class="container">
 
 <h1>Page 08: The Two Problems Adam Solves</h1>
-<p class="subtitle">MATH 3850 -- This is why Adam exists. Everything in the paper is a solution to these two problems.</p>
+<p class="subtitle">MATH 3850; This is why Adam exists. Everything in the paper is a solution to these two problems.</p>
 
 <div class="note" style="font-size: 18px; border-left-color: #ffd93d;">
-  <strong>Where we are in the story:</strong> Pages 00-05 gave you the optimization foundations. Pages 06-07 introduced the ML setting (stochastic gradients, loss functions). Now we identify the exact two problems that SGD has -- and preview how Adam fixes each one. Pages 09-12 will show the details.
+  <strong>Where we are in the story:</strong> Pages 00-05 gave you the optimization foundations. Pages 06-07 introduced the ML setting (stochastic gradients, loss functions). Now we identify the exact two problems that SGD has; and preview how Adam fixes each one. Pages 09-12 will show the details.
 </div>
 
 <!-- ===================== PROBLEM 1 ===================== -->
@@ -78,17 +78,17 @@
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$m_t = \beta_1 \cdot m_{t-1} + (1 - \beta_1) \cdot g_t$$</p>
   <dl class="breakdown">
     <dt>$m_t$</dt>
-    <dd>The momentum (smoothed gradient) at step $t$ -- a running average that filters out noise</dd>
+    <dd>The momentum (smoothed gradient) at step $t$; a running average that filters out noise</dd>
     <dt>$\beta_1$</dt>
     <dd>Decay rate controlling how much history to keep (default 0.9, meaning 90% old + 10% new)</dd>
     <dt>$m_{t-1}$</dt>
-    <dd>The momentum from the previous step -- carries forward the accumulated direction</dd>
+    <dd>The momentum from the previous step; carries forward the accumulated direction</dd>
     <dt>$g_t$</dt>
     <dd>The current noisy gradient from this step's random minibatch</dd>
     <dt>$(1 - \beta_1)$</dt>
-    <dd>Weight on the new gradient (0.1 with default $\beta_1$) -- only a small fraction of new info gets in</dd>
+    <dd>Weight on the new gradient (0.1 with default $\beta_1$); only a small fraction of new info gets in</dd>
   </dl>
-  <p style="font-size: 16px;">This is like asking 10 drunk friends for directions and averaging their answers -- the random wobbles cancel out, and the average points in the right direction.</p>
+  <p style="font-size: 16px;">This is like asking 10 drunk friends for directions and averaging their answers; the random wobbles cancel out, and the average points in the right direction.</p>
   <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;"><strong>$\beta_1 = 0.9$ means:</strong> "90% of the old average + 10% of the new gradient." Heavy smoothing. The zigzag gets ironed out.</p>
   <p style="margin-top: 12px; font-size: 16px;">Details: <strong>Page 09</strong></p>
 </div>
@@ -108,7 +108,7 @@
     </ul>
   </div>
 
-  <p>In real ML models, some parameters have huge gradients and others have tiny ones. A single $\alpha$ can't serve both -- it's either too aggressive for the big ones or too timid for the small ones.</p>
+  <p>In real ML models, some parameters have huge gradients and others have tiny ones. A single $\alpha$ can't serve both; it's either too aggressive for the big ones or too timid for the small ones.</p>
 
   <p style="margin-top: 12px; font-size: 16px; color: #888;">This is the condition number problem from Page 03, but worse because in ML you have thousands of parameters, each needing a different scale.</p>
 </div>
@@ -120,18 +120,18 @@
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$v_t = \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g_t^2$$</p>
   <dl class="breakdown">
     <dt>$v_t$</dt>
-    <dd>Running average of squared gradients at step $t$ -- tracks how big this parameter's gradient has been</dd>
+    <dd>Running average of squared gradients at step $t$; tracks how big this parameter's gradient has been</dd>
     <dt>$\beta_2$</dt>
     <dd>Decay rate for the second moment (default 0.999, very long memory spanning ~1000 steps)</dd>
     <dt>$v_{t-1}$</dt>
-    <dd>The previous step's squared-gradient average -- carries the long-term gradient scale</dd>
+    <dd>The previous step's squared-gradient average; carries the long-term gradient scale</dd>
     <dt>$g_t^2$</dt>
-    <dd>The current gradient squared (elementwise) -- makes everything positive and emphasizes large values</dd>
+    <dd>The current gradient squared (elementwise); makes everything positive and emphasizes large values</dd>
     <dt>$\alpha / \sqrt{v_t}$</dt>
     <dd>Effective step size: big $v_t$ means big past gradients, so divide to shrink the step; small $v_t$ means weak gradients, so the step grows</dd>
   </dl>
   <p style="font-size: 16px;">Then divides by $\sqrt{v_t}$ in the update. Parameters with big gradients get a big denominator (smaller step). Parameters with small gradients get a small denominator (bigger step).</p>
-  <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;"><strong>$\beta_2 = 0.999$ means:</strong> "99.9% of old average + 0.1% of new squared gradient." Very long memory -- captures the long-term scale of each parameter's gradient.</p>
+  <p style="margin-top: 12px; font-size: 16px; color: #ffd93d;"><strong>$\beta_2 = 0.999$ means:</strong> "99.9% of old average + 0.1% of new squared gradient." Very long memory; captures the long-term scale of each parameter's gradient.</p>
   <p style="margin-top: 12px; font-size: 16px;">Details: <strong>Page 10</strong></p>
 </div>
 
@@ -142,9 +142,9 @@
     <svg viewBox="0 0 340 280" style="width:100%;">
       <text x="170" y="18" text-anchor="middle" fill="#ff6b6b" font-size="13" font-weight="bold">Problem 1: Zigzag</text>
       <!-- Contours -->
-      <ellipse cx="170" cy="160" rx="150" ry="100" fill="none" stroke="#333" stroke-width="1"/>
-      <ellipse cx="170" cy="160" rx="100" ry="65" fill="none" stroke="#444" stroke-width="1"/>
-      <ellipse cx="170" cy="160" rx="50" ry="30" fill="none" stroke="#555" stroke-width="1"/>
+      <ellipse cx="170" cy="160" rx="150" ry="100" fill="none" stroke="#4a4a5a" stroke-width="1.5"/>
+      <ellipse cx="170" cy="160" rx="100" ry="65" fill="none" stroke="#5a5a6a" stroke-width="1.5"/>
+      <ellipse cx="170" cy="160" rx="50" ry="30" fill="none" stroke="#6a6a7a" stroke-width="1.5"/>
       <text x="170" y="164" text-anchor="middle" fill="#ffd93d" font-size="16">&#9733;</text>
       <!-- SGD zigzag path -->
       <polyline points="300,60 270,100 290,120 260,140 280,150 250,155 265,158 240,160 250,162 220,160 230,162 200,160 210,161 185,160 175,160 170,160"
@@ -155,9 +155,9 @@
         fill="none" stroke="#64ffda" stroke-width="2.5" stroke-dasharray="6,3"/>
       <!-- Legend -->
       <line x1="40" y1="248" x2="60" y2="248" stroke="#ff6b6b" stroke-width="2"/>
-      <text x="65" y="252" fill="#ff6b6b" font-size="10">SGD (noisy)</text>
+      <text x="65" y="252" fill="#ff6b6b" font-size="13">SGD (noisy)</text>
       <line x1="40" y1="265" x2="60" y2="265" stroke="#64ffda" stroke-width="2.5" stroke-dasharray="6,3"/>
-      <text x="65" y="269" fill="#64ffda" font-size="10">With momentum (smooth)</text>
+      <text x="65" y="269" fill="#64ffda" font-size="13">With momentum (smooth)</text>
     </svg>
   </div>
   <!-- One-size vs Per-parameter SVG -->
@@ -165,10 +165,10 @@
     <svg viewBox="0 0 340 280" style="width:100%;">
       <text x="170" y="18" text-anchor="middle" fill="#ff6b6b" font-size="13" font-weight="bold">Problem 2: One-Size-Fits-All</text>
       <!-- Elongated contours (bathtub) -->
-      <ellipse cx="170" cy="160" rx="150" ry="50" fill="none" stroke="#333" stroke-width="1"/>
-      <ellipse cx="170" cy="160" rx="110" ry="35" fill="none" stroke="#444" stroke-width="1"/>
-      <ellipse cx="170" cy="160" rx="70" ry="20" fill="none" stroke="#555" stroke-width="1"/>
-      <ellipse cx="170" cy="160" rx="25" ry="8" fill="none" stroke="#666" stroke-width="1"/>
+      <ellipse cx="170" cy="160" rx="150" ry="50" fill="none" stroke="#4a4a5a" stroke-width="1.5"/>
+      <ellipse cx="170" cy="160" rx="110" ry="35" fill="none" stroke="#5a5a6a" stroke-width="1.5"/>
+      <ellipse cx="170" cy="160" rx="70" ry="20" fill="none" stroke="#6a6a7a" stroke-width="1.5"/>
+      <ellipse cx="170" cy="160" rx="25" ry="8" fill="none" stroke="#666" stroke-width="1.5"/>
       <text x="170" y="164" text-anchor="middle" fill="#ffd93d" font-size="16">&#9733;</text>
       <!-- Same-alpha path (overshoots in y, crawls in x) -->
       <polyline points="300,100 280,200 260,90 245,210 230,105 218,195 210,120 200,180 193,140 185,170 178,150 172,165 170,160"
@@ -179,9 +179,9 @@
         fill="none" stroke="#64ffda" stroke-width="2.5" stroke-dasharray="6,3"/>
       <!-- Legend -->
       <line x1="40" y1="248" x2="60" y2="248" stroke="#ff6b6b" stroke-width="2"/>
-      <text x="65" y="252" fill="#ff6b6b" font-size="10">Same step size</text>
+      <text x="65" y="252" fill="#ff6b6b" font-size="13">Same step size</text>
       <line x1="40" y1="265" x2="60" y2="265" stroke="#64ffda" stroke-width="2.5" stroke-dasharray="6,3"/>
-      <text x="65" y="269" fill="#64ffda" font-size="10">Adaptive (per-parameter)</text>
+      <text x="65" y="269" fill="#64ffda" font-size="13">Adaptive (per-parameter)</text>
     </svg>
   </div>
 </div>
@@ -204,16 +204,16 @@
 
   <div class="step">
     <p class="step-label">Parameter 1 (big gradients): $g = [10, 12, 8]$</p>
-    <p style="color:#888; font-size:15px;">This parameter has consistently large gradients -- like the steep y-direction in the bathtub.</p>
+    <p style="color:#888; font-size:15px;">This parameter has consistently large gradients; like the steep y-direction in the bathtub.</p>
     <p>Average magnitude $\approx 10$. Adam's adaptive rate: $\alpha / \sqrt{v} \approx \alpha / \sqrt{100} = \alpha / 10$</p>
-    <p class="result">Effective step size: $\alpha / 10$ (small steps -- big gradient is tamed)</p>
+    <p class="result">Effective step size: $\alpha / 10$ (small steps; big gradient is tamed)</p>
   </div>
 
   <div class="step">
     <p class="step-label">Parameter 2 (small gradients): $g = [0.1, -0.2, 0.15]$</p>
-    <p style="color:#888; font-size:15px;">This parameter has tiny gradients -- like the gentle x-direction in the bathtub. SGD barely moves it.</p>
+    <p style="color:#888; font-size:15px;">This parameter has tiny gradients; like the gentle x-direction in the bathtub. SGD barely moves it.</p>
     <p>Average magnitude $\approx 0.15$. Adam's adaptive rate: $\alpha / \sqrt{v} \approx \alpha / \sqrt{0.02} = \alpha / 0.14$</p>
-    <p class="result">Effective step size: $\alpha / 0.14 \approx 7\alpha$ (big steps -- weak gradient is boosted)</p>
+    <p class="result">Effective step size: $\alpha / 0.14 \approx 7\alpha$ (big steps; weak gradient is boosted)</p>
   </div>
 
   <div class="step">
@@ -230,13 +230,13 @@
     <!-- Problem boxes -->
     <rect x="10" y="10" width="200" height="80" rx="12" fill="#3d1212" stroke="#ff6b6b" stroke-width="2"/>
     <text x="110" y="38" text-anchor="middle" fill="#ff6b6b" font-size="13" font-weight="bold">PROBLEM 1</text>
-    <text x="110" y="58" text-anchor="middle" fill="#e0e0e0" font-size="12">Noisy gradients</text>
-    <text x="110" y="75" text-anchor="middle" fill="#e0e0e0" font-size="12">(zigzag)</text>
+    <text x="110" y="58" text-anchor="middle" fill="#e0e0e0" font-size="14">Noisy gradients</text>
+    <text x="110" y="75" text-anchor="middle" fill="#e0e0e0" font-size="14">(zigzag)</text>
 
     <rect x="10" y="110" width="200" height="80" rx="12" fill="#3d1212" stroke="#ff6b6b" stroke-width="2"/>
     <text x="110" y="138" text-anchor="middle" fill="#ff6b6b" font-size="13" font-weight="bold">PROBLEM 2</text>
-    <text x="110" y="158" text-anchor="middle" fill="#e0e0e0" font-size="12">One step size for all</text>
-    <text x="110" y="175" text-anchor="middle" fill="#e0e0e0" font-size="12">(bathtub problem)</text>
+    <text x="110" y="158" text-anchor="middle" fill="#e0e0e0" font-size="14">One step size for all</text>
+    <text x="110" y="175" text-anchor="middle" fill="#e0e0e0" font-size="14">(bathtub problem)</text>
 
     <!-- Arrows -->
     <polygon points="225,50 245,50 245,43 260,52 245,61 245,54 225,54" fill="#ffd93d"/>
@@ -245,23 +245,23 @@
     <!-- Solution boxes -->
     <rect x="275" y="10" width="200" height="80" rx="12" fill="#0a2e1a" stroke="#64ffda" stroke-width="2"/>
     <text x="375" y="38" text-anchor="middle" fill="#64ffda" font-size="13" font-weight="bold">SOLUTION 1: Momentum</text>
-    <text x="375" y="58" text-anchor="middle" fill="#e0e0e0" font-size="12">Average past gradients</text>
-    <text x="375" y="75" text-anchor="middle" fill="#ccc" font-size="11">m_t (first moment)</text>
+    <text x="375" y="58" text-anchor="middle" fill="#e0e0e0" font-size="14">Average past gradients</text>
+    <text x="375" y="75" text-anchor="middle" fill="#ccc" font-size="13">m_t (first moment)</text>
 
     <rect x="275" y="110" width="200" height="80" rx="12" fill="#0a2e1a" stroke="#64ffda" stroke-width="2"/>
     <text x="375" y="138" text-anchor="middle" fill="#64ffda" font-size="13" font-weight="bold">SOLUTION 2: Adaptive α</text>
-    <text x="375" y="158" text-anchor="middle" fill="#e0e0e0" font-size="12">Per-parameter step sizes</text>
-    <text x="375" y="175" text-anchor="middle" fill="#ccc" font-size="11">v_t (second moment)</text>
+    <text x="375" y="158" text-anchor="middle" fill="#e0e0e0" font-size="14">Per-parameter step sizes</text>
+    <text x="375" y="175" text-anchor="middle" fill="#ccc" font-size="13">v_t (second moment)</text>
 
     <!-- Combine arrow -->
     <polygon points="490,50 510,50 510,43 525,100 510,157 510,150 490,150 490,143 505,100 490,57" fill="#bb86fc" opacity="0.6"/>
-    <text x="508" y="105" text-anchor="middle" fill="#bb86fc" font-size="11" font-weight="bold">combine</text>
+    <text x="508" y="105" text-anchor="middle" fill="#bb86fc" font-size="13" font-weight="bold">combine</text>
 
     <!-- Adam box -->
     <rect x="540" y="50" width="190" height="100" rx="16" fill="#0f3460" stroke="#ffd93d" stroke-width="3"/>
     <text x="635" y="85" text-anchor="middle" fill="#ffd93d" font-size="18" font-weight="bold">ADAM</text>
     <text x="635" y="110" text-anchor="middle" fill="#e0e0e0" font-size="13">m̂_t / (√v̂_t + ε)</text>
-    <text x="635" y="132" text-anchor="middle" fill="#ccc" font-size="11">+ bias correction</text>
+    <text x="635" y="132" text-anchor="middle" fill="#ccc" font-size="13">+ bias correction</text>
   </svg>
 
   <p style="font-size: 17px; text-align: center; margin-top: 12px;">
@@ -274,7 +274,7 @@
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary -- The Two Problems</h3>
+  <h3>Glossary; The Two Problems</h3>
   <dl>
     <dt>Zigzag problem</dt>
     <dd>SGD's noisy gradients cause the path to wobble side-to-side instead of going straight to the minimum. Wastes compute.</dd>
@@ -297,8 +297,8 @@
 </div>
 
 <a href="concept-09-momentum.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 09 -- Exponential Moving Averages and Momentum</p>
-  <p>How Adam smooths the zigzag -- the first moment in full detail</p>
+  <p>Next: Page 09; Exponential Moving Averages and Momentum</p>
+  <p>How Adam smooths the zigzag; the first moment in full detail</p>
 </div></a>
 
 </div>

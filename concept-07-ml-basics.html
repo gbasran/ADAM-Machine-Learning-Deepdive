@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Page 07: Machine Learning Basics -- What Are We Actually Optimizing?</title>
+<title>Page 07: Machine Learning Basics; What Are We Actually Optimizing?</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
@@ -47,7 +47,7 @@
 <div class="container">
 
 <h1>Page 07: Machine Learning Basics</h1>
-<p class="subtitle">MATH 3850 -- What the Adam paper is actually optimizing: loss functions, parameters, MNIST, and logistic regression</p>
+<p class="subtitle">MATH 3850; What the Adam paper is actually optimizing: loss functions, parameters, MNIST, and logistic regression</p>
 
 <!-- ===================== PART A: THE SETUP ===================== -->
 <span class="tag">PART A</span>
@@ -71,7 +71,7 @@
   <p style="text-align: center; font-size: 22px; margin: 12px 0;">$$\min_\theta \frac{1}{N} \sum_{i=1}^{N} L(y_i, \;\hat{y}_i(\theta))$$</p>
   <dl class="breakdown">
     <dt>$\theta$</dt>
-    <dd>All the model's adjustable parameters (the "knobs to tune" -- weights and biases)</dd>
+    <dd>All the model's adjustable parameters (the "knobs to tune"; weights and biases)</dd>
     <dt>$N$</dt>
     <dd>Total number of data points in the training set (e.g., 60,000 MNIST images)</dd>
     <dt>$y_i$</dt>
@@ -79,7 +79,7 @@
     <dt>$\hat{y}_i(\theta)$</dt>
     <dd>The model's prediction for data point $i$, which depends on the current parameter values</dd>
     <dt>$L(y, \hat{y})$</dt>
-    <dd>The loss function -- measures how wrong a single prediction is (small = good, large = bad)</dd>
+    <dd>The loss function; measures how wrong a single prediction is (small = good, large = bad)</dd>
     <dt>$\frac{1}{N}\sum$</dt>
     <dd>Average the per-point losses over the entire dataset</dd>
     <dt>$\min_\theta$</dt>
@@ -128,22 +128,22 @@
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$\hat{y} = \text{softmax}(W \cdot x + b)$$</p>
   <dl class="breakdown">
     <dt>$\hat{y}$</dt>
-    <dd>The model's predicted probability distribution -- a vector of 10 probabilities (one per digit 0-9), summing to 1</dd>
+    <dd>The model's predicted probability distribution; a vector of 10 probabilities (one per digit 0-9), summing to 1</dd>
     <dt>$x$</dt>
     <dd>The input image flattened into a list of 784 pixel brightness values</dd>
     <dt>$W$</dt>
-    <dd>A $10 \times 784$ weight matrix -- each row holds one digit's "vote weights" for all 784 pixels</dd>
+    <dd>A $10 \times 784$ weight matrix; each row holds one digit's "vote weights" for all 784 pixels</dd>
     <dt>$b$</dt>
     <dd>A bias vector of 10 numbers (one per digit class), shifting the raw scores up or down</dd>
     <dt>$\text{softmax}$</dt>
-    <dd>A function that converts raw scores into probabilities -- biggest score gets highest probability, all outputs sum to 1</dd>
+    <dd>A function that converts raw scores into probabilities; biggest score gets highest probability, all outputs sum to 1</dd>
     <dt>$W \cdot x + b$</dt>
     <dd>The raw "score" for each digit before converting to probabilities (a vector of 10 numbers)</dd>
   </dl>
 
   <p style="margin-top: 16px; font-size: 16px; color: #ffd93d;"><strong>The parameters $\theta = \{W, b\}$:</strong></p>
   <p style="font-size: 16px;">$W$ has $10 \times 784 = 7,840$ entries. $b$ has 10 entries. Total: <strong>7,850 parameters</strong>.</p>
-  <p style="font-size: 16px; margin-top: 8px;">These 7,850 numbers are what Adam optimizes. The gradient $g_t$ is a vector of 7,850 partial derivatives -- one for each parameter.</p>
+  <p style="font-size: 16px; margin-top: 8px;">These 7,850 numbers are what Adam optimizes. The gradient $g_t$ is a vector of 7,850 partial derivatives; one for each parameter.</p>
 </div>
 
 <div class="hand-calc">
@@ -152,14 +152,14 @@
 
   <div class="step">
     <p class="step-label">Input image: $x = [0.8, 0.2, 0.5]$ (3 pixel values)</p>
-    <p style="color:#888; font-size:15px;">This is the raw data -- pixel brightness values the model will look at.</p>
+    <p style="color:#888; font-size:15px;">This is the raw data; pixel brightness values the model will look at.</p>
   </div>
   <div class="step">
     <p class="step-label">Weight matrix: $W = \begin{bmatrix}0.3 & -0.1 & 0.4 \\ -0.2 & 0.5 & 0.1\end{bmatrix}$ (2 classes &times; 3 pixels)</p>
   </div>
   <div class="step">
     <p class="step-label">Compute scores: $W \cdot x$</p>
-    <p style="color:#888; font-size:15px;">Multiply each pixel by its weight and sum -- this is the dot product for each class.</p>
+    <p style="color:#888; font-size:15px;">Multiply each pixel by its weight and sum; this is the dot product for each class.</p>
     <p>Class 0 (cat): $0.3(0.8) + (-0.1)(0.2) + 0.4(0.5) = 0.24 - 0.02 + 0.20 = $ <span class="result">$0.42$</span></p>
     <p>Class 1 (dog): $(-0.2)(0.8) + 0.5(0.2) + 0.1(0.5) = -0.16 + 0.10 + 0.05 = $ <span class="result">$-0.01$</span></p>
   </div>
@@ -184,11 +184,11 @@
   <p style="text-align: center; font-size: 20px; margin: 12px 0;">$$L = -\log(\hat{y}_{\text{correct class}})$$</p>
   <dl class="breakdown">
     <dt>$L$</dt>
-    <dd>The loss for a single data point -- a non-negative number where 0 means a perfect prediction</dd>
+    <dd>The loss for a single data point; a non-negative number where 0 means a perfect prediction</dd>
     <dt>$\hat{y}_{\text{correct class}}$</dt>
     <dd>The probability the model assigned to the correct answer (e.g., how much probability it put on "7" when the image really was a 7)</dd>
     <dt>$-\log(\cdot)$</dt>
-    <dd>Negative logarithm -- turns a probability close to 1 into a small loss, and a probability close to 0 into a very large loss</dd>
+    <dd>Negative logarithm; turns a probability close to 1 into a small loss, and a probability close to 0 into a very large loss</dd>
   </dl>
   <p style="font-size: 16px; margin-top: 12px;">In English: "how surprised was the model by the correct answer?"</p>
   <ul style="margin: 12px 0 0 20px; font-size: 16px;">
@@ -216,7 +216,7 @@
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary -- Machine Learning Basics</h3>
+  <h3>Glossary; Machine Learning Basics</h3>
   <dl>
     <dt>Model</dt>
     <dd>A mathematical function with adjustable parameters. Takes input data, produces predictions.</dd>
@@ -248,8 +248,8 @@
 </div>
 
 <a href="concept-08-two-problems.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 08 -- The Two Problems Adam Solves</p>
-  <p>Zigzag (noise) and one-size-fits-all (step sizes) -- the setup for understanding Adam</p>
+  <p>Next: Page 08; The Two Problems Adam Solves</p>
+  <p>Zigzag (noise) and one-size-fits-all (step sizes); the setup for understanding Adam</p>
 </div></a>
 
 </div>

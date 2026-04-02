@@ -57,7 +57,7 @@
 <div class="container">
 
 <h1>Page 01: Vectors, Norms, and Elementwise Operations</h1>
-<p class="subtitle">MATH 3850 &mdash; The tools Adam uses in every single formula</p>
+<p class="subtitle">MATH 3850; The tools Adam uses in every single formula</p>
 
 <!-- ===================== PART A: VECTORS ===================== -->
 <span class="tag">PART A</span>
@@ -65,7 +65,7 @@
 
 <div class="analogy">
   <p><strong>Analogy: A grocery receipt.</strong></p>
-  <p>A receipt is a list of numbers: [$4.50, $2.00, $8.99, $1.25]. A vector is the same thing &mdash; just a list of numbers bundled together. Instead of prices, the numbers represent parameters, gradients, or positions.</p>
+  <p>A receipt is a list of numbers: [$4.50, $2.00, $8.99, $1.25]. A vector is the same thing; just a list of numbers bundled together. Instead of prices, the numbers represent parameters, gradients, or positions.</p>
 </div>
 
 <div class="formula-box">
@@ -76,7 +76,7 @@
 </div>
 
 <div class="note">
-  <strong>Why does this matter?</strong> In the Adam paper, EVERYTHING is a vector: the parameters $\theta$, the gradient $g_t$, the momentum $m_t$, the second moment $v_t$. Understanding that these are just lists of numbers &mdash; and that operations happen to each number independently &mdash; is the key to reading Adam's formulas.
+  <strong>Why does this matter?</strong> In the Adam paper, EVERYTHING is a vector: the parameters $\theta$, the gradient $g_t$, the momentum $m_t$, the second moment $v_t$. Understanding that these are just lists of numbers; and that operations happen to each number independently; is the key to reading Adam's formulas.
 </div>
 
 <!-- ===================== PART B: NORMS ===================== -->
@@ -160,9 +160,9 @@
 
 <div class="note">
   <strong>How to read these plots:</strong> Each shape shows all vectors with norm = 1 (the "unit ball"). The shape tells you what "distance 1" looks like under each norm.<br><br>
-  <strong>Left (L2):</strong> A circle &mdash; straight-line distance. The most familiar one.<br>
-  <strong>Middle (L1):</strong> A diamond &mdash; taxi distance. Dashed yellow line shows the taxi path (go right, then up).<br>
-  <strong>Right (L&infin;):</strong> A square &mdash; only the biggest component matters. If max component is &le; 1, you're inside the square.
+  <strong>Left (L2):</strong> A circle; straight-line distance. The most familiar one.<br>
+  <strong>Middle (L1):</strong> A diamond; taxi distance. Dashed yellow line shows the taxi path (go right, then up).<br>
+  <strong>Right (L&infin;):</strong> A square; only the biggest component matters. If max component is &le; 1, you're inside the square.
 </div>
 
 <div class="hand-calc">
@@ -189,7 +189,7 @@
 
 <div class="analogy">
   <p><strong>Analogy: Apply a discount to every item on a receipt.</strong></p>
-  <p>If every item gets 10% off, you multiply each price by 0.9 separately. You don't add all prices first &mdash; each item gets its own calculation. That's "elementwise": apply the operation to each entry independently.</p>
+  <p>If every item gets 10% off, you multiply each price by 0.9 separately. You don't add all prices first; each item gets its own calculation. That's "elementwise": apply the operation to each entry independently.</p>
 </div>
 
 <div class="why-box">
@@ -240,7 +240,7 @@
   <div class="step">
     <p class="step-label">Step 1: Square the gradient elementwise ($g^2$)</p>
     <p>$g^2 = [4^2,\; (-1)^2,\; 3^2] =$ <span class="result">$[16, 1, 9]$</span></p>
-    <p style="font-size: 15px; color: #888;">This is what Adam does to build $v_t$ &mdash; it tracks how big each gradient component has been</p>
+    <p style="font-size: 15px; color: #888;">This is what Adam does to build $v_t$; it tracks how big each gradient component has been</p>
   </div>
 
   <div class="step">
@@ -252,7 +252,7 @@
   <div class="step">
     <p class="step-label">Step 3: Divide gradient by the square root ($g \;/\; \sqrt{g^2}$)</p>
     <p>$[4, -1, 3] \;/\; [4, 1, 3] = [4/4,\; -1/1,\; 3/3] =$ <span class="result">$[1, -1, 1]$</span></p>
-    <p style="font-size: 15px; color: #888;">Each component normalized to $\pm 1$! This is the core idea of Adam &mdash; the direction is preserved but the magnitude is equalized across all parameters</p>
+    <p style="font-size: 15px; color: #888;">Each component normalized to $\pm 1$! This is the core idea of Adam; the direction is preserved but the magnitude is equalized across all parameters</p>
   </div>
 
   <p class="check">This is essentially what Adam's update rule does: $\hat{m}_t / \sqrt{\hat{v}_t}$ normalizes the gradient so that all parameters get steps of similar magnitude, regardless of whether their gradient is huge or tiny.</p>
@@ -269,7 +269,7 @@
     <li>$\alpha \cdot (...)$ = scalar times vector (multiply each entry by $\alpha$)</li>
     <li>$\theta_{t-1} - (...)$ = elementwise subtraction</li>
   </ul>
-  <p style="margin-top: 12px; color: #ccc; font-size: 15px;">Every operation in Adam is elementwise. Each parameter gets its own independent calculation. That's what makes it "adaptive" &mdash; each parameter is handled separately.</p>
+  <p style="margin-top: 12px; color: #ccc; font-size: 15px;">Every operation in Adam is elementwise. Each parameter gets its own independent calculation. That's what makes it "adaptive"; each parameter is handled separately.</p>
 </div>
 
 <!-- ===================== PART D: SCALAR VS VECTOR VS MATRIX ===================== -->
@@ -286,7 +286,7 @@
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary &mdash; Vectors, Norms, and Operations</h3>
+  <h3>Glossary; Vectors, Norms, and Operations</h3>
   <dl>
     <dt>Vector</dt>
     <dd>A list of numbers. Written as $[a, b, c]$ or as a column. The gradient, parameters, and moment estimates in Adam are all vectors.</dd>
@@ -309,7 +309,7 @@
 </div>
 
 <a href="concept-02-convexity.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 02 &mdash; Convexity: What Makes Problems "Nice"</p>
+  <p>Next: Page 02; Convexity: What Makes Problems "Nice"</p>
   <p>Why Adam's theory works on bowls but Adam itself works on everything</p>
 </div></a>
 

@@ -53,7 +53,7 @@
 <div class="container">
 
 <h1>Page 11: Bias Correction</h1>
-<p class="subtitle">MATH 3850  -- Adam Paper, Section 3  -- Why the first few steps are wrong, and how one division fixes it</p>
+<p class="subtitle">MATH 3850 ; Adam Paper, Section 3 ; Why the first few steps are wrong, and how one division fixes it</p>
 
 <!-- ===================== PART A: THE PROBLEM ===================== -->
 <span class="tag">PART A</span>
@@ -61,8 +61,8 @@
 
 <div class="analogy">
   <p><strong>Analogy: You just moved to a new city.</strong></p>
-  <p>Someone asks: "what's the average temperature here?" On your first day, you measured 15&deg;C. But that's just <em>one day</em>  -- it's not a good estimate of the average. After 30 days, your running average is solid. After 1 day? Garbage.</p>
-  <p style="margin-top: 12px;">Adam has the same problem. It initializes $m_0 = 0$ and $v_0 = 0$. At step 1, the EMA barely reflects the actual gradient  -- it's dominated by the zero initialization. <strong>Bias correction fixes this by scaling up the early estimates.</strong></p>
+  <p>Someone asks: "what's the average temperature here?" On your first day, you measured 15&deg;C. But that's just <em>one day</em> ; it's not a good estimate of the average. After 30 days, your running average is solid. After 1 day? Garbage.</p>
+  <p style="margin-top: 12px;">Adam has the same problem. It initializes $m_0 = 0$ and $v_0 = 0$. At step 1, the EMA barely reflects the actual gradient ; it's dominated by the zero initialization. <strong>Bias correction fixes this by scaling up the early estimates.</strong></p>
 </div>
 
 <div class="hand-calc">
@@ -170,14 +170,14 @@
 </table>
 
 <div class="note">
-  <strong>Red column ($m_t$):</strong> biased  -- starts at 0.5 and slowly climbs toward 5. Would take ~50 steps to get close.<br>
-  <strong>Green column ($\hat{m}_t$):</strong> corrected  -- hits 5.0 immediately at $t=1$ and stays there. The division perfectly compensates for the zero initialization.
+  <strong>Red column ($m_t$):</strong> biased ; starts at 0.5 and slowly climbs toward 5. Would take ~50 steps to get close.<br>
+  <strong>Green column ($\hat{m}_t$):</strong> corrected ; hits 5.0 immediately at $t=1$ and stays there. The division perfectly compensates for the zero initialization.
 </div>
 
 <!-- ===================== SVG: BIAS VS CORRECTED ===================== -->
 <svg viewBox="0 0 800 320" style="width:100%; margin: 30px 0;">
   <!-- Background grid -->
-  <rect x="60" y="20" width="700" height="250" rx="8" fill="#0f1a2e" stroke="#333" stroke-width="1"/>
+  <rect x="60" y="20" width="700" height="250" rx="8" fill="#0f1a2e" stroke="#4a4a5a" stroke-width="1"/>
   <!-- Horizontal grid lines -->
   <line x1="60" y1="70" x2="760" y2="70" stroke="#222" stroke-width="1" stroke-dasharray="4,4"/>
   <line x1="60" y1="120" x2="760" y2="120" stroke="#222" stroke-width="1" stroke-dasharray="4,4"/>
@@ -185,24 +185,24 @@
   <line x1="60" y1="220" x2="760" y2="220" stroke="#222" stroke-width="1" stroke-dasharray="4,4"/>
 
   <!-- Y-axis labels -->
-  <text x="50" y="50" text-anchor="end" fill="#888" font-size="11">5.0</text>
-  <text x="50" y="100" text-anchor="end" fill="#888" font-size="11">3.75</text>
-  <text x="50" y="150" text-anchor="end" fill="#888" font-size="11">2.5</text>
-  <text x="50" y="200" text-anchor="end" fill="#888" font-size="11">1.25</text>
-  <text x="50" y="250" text-anchor="end" fill="#888" font-size="11">0</text>
+  <text x="50" y="50" text-anchor="end" fill="#aaa" font-size="14">5.0</text>
+  <text x="50" y="100" text-anchor="end" fill="#aaa" font-size="14">3.75</text>
+  <text x="50" y="150" text-anchor="end" fill="#aaa" font-size="14">2.5</text>
+  <text x="50" y="200" text-anchor="end" fill="#aaa" font-size="14">1.25</text>
+  <text x="50" y="250" text-anchor="end" fill="#aaa" font-size="14">0</text>
 
   <!-- X-axis labels -->
-  <text x="60" y="285" text-anchor="middle" fill="#888" font-size="11">0</text>
-  <text x="200" y="285" text-anchor="middle" fill="#888" font-size="11">5</text>
-  <text x="340" y="285" text-anchor="middle" fill="#888" font-size="11">10</text>
-  <text x="480" y="285" text-anchor="middle" fill="#888" font-size="11">15</text>
-  <text x="620" y="285" text-anchor="middle" fill="#888" font-size="11">20</text>
-  <text x="760" y="285" text-anchor="middle" fill="#888" font-size="11">25</text>
-  <text x="410" y="310" text-anchor="middle" fill="#888" font-size="13">Timestep t</text>
+  <text x="60" y="285" text-anchor="middle" fill="#aaa" font-size="14">0</text>
+  <text x="200" y="285" text-anchor="middle" fill="#aaa" font-size="14">5</text>
+  <text x="340" y="285" text-anchor="middle" fill="#aaa" font-size="14">10</text>
+  <text x="480" y="285" text-anchor="middle" fill="#aaa" font-size="14">15</text>
+  <text x="620" y="285" text-anchor="middle" fill="#aaa" font-size="14">20</text>
+  <text x="760" y="285" text-anchor="middle" fill="#aaa" font-size="14">25</text>
+  <text x="410" y="310" text-anchor="middle" fill="#aaa" font-size="14">Timestep t</text>
 
   <!-- True value (dashed yellow) -->
   <line x1="60" y1="45" x2="760" y2="45" stroke="#ffd93d" stroke-width="2" stroke-dasharray="8,6"/>
-  <text x="770" y="49" fill="#ffd93d" font-size="11" font-weight="bold">true g = 5</text>
+  <text x="770" y="49" fill="#ffd93d" font-size="13" font-weight="bold">true g = 5</text>
 
   <!-- Biased m_t curve (purple, starts near 0 and slowly climbs) -->
   <!-- m_t = 5*(1 - 0.9^t): t1=0.5, t2=0.95, t3=1.355, t5=2.05, t7=2.61, t10=3.26, t15=3.94, t20=4.39, t25=4.62 -->
@@ -216,17 +216,17 @@
 
   <!-- Legend -->
   <rect x="120" y="295" width="16" height="3" fill="#bb86fc"/>
-  <text x="142" y="300" fill="#bb86fc" font-size="11">m_t (biased)</text>
+  <text x="142" y="300" fill="#bb86fc" font-size="13">m_t (biased)</text>
   <rect x="260" y="295" width="16" height="3" fill="#64ffda"/>
-  <text x="282" y="300" fill="#64ffda" font-size="11">m-hat_t (corrected)</text>
+  <text x="282" y="300" fill="#64ffda" font-size="13">m-hat_t (corrected)</text>
   <rect x="430" y="295" width="16" height="3" fill="#ffd93d" stroke-dasharray="4,3"/>
-  <text x="452" y="300" fill="#ffd93d" font-size="11">true value</text>
+  <text x="452" y="300" fill="#ffd93d" font-size="13">true value</text>
   <rect x="570" y="293" width="16" height="10" fill="#ff6b6b" fill-opacity="0.3"/>
-  <text x="592" y="300" fill="#ff6b6b" font-size="11">bias gap</text>
+  <text x="592" y="300" fill="#ff6b6b" font-size="13">bias gap</text>
 
   <!-- Annotation arrow at t=1 -->
   <line x1="88" y1="140" x2="88" y2="240" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="3,3"/>
-  <text x="95" y="152" fill="#ff6b6b" font-size="10" font-weight="bold">10x gap at t=1!</text>
+  <text x="95" y="152" fill="#ff6b6b" font-size="13" font-weight="bold">10x gap at t=1!</text>
 </svg>
 
 <!-- ===================== PART C: THE PLOT ===================== -->
@@ -243,15 +243,15 @@
 
 <div class="why-box">
   <h3>Why does the paper care so much about this?</h3>
-  <p><strong>Without bias correction, Adam degrades to RMSProp</strong> (a different optimizer). The paper shows in Section 6.4 (Figure 4) that removing bias correction leads to instabilities  -- especially when $\beta_2$ is close to 1, which is the recommended setting. Bias correction is what separates Adam from its predecessors.</p>
+  <p><strong>Without bias correction, Adam degrades to RMSProp</strong> (a different optimizer). The paper shows in Section 6.4 (Figure 4) that removing bias correction leads to instabilities ; especially when $\beta_2$ is close to 1, which is the recommended setting. Bias correction is what separates Adam from its predecessors.</p>
 </div>
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary  -- Bias Correction</h3>
+  <h3>Glossary ; Bias Correction</h3>
   <dl>
     <dt>Initialization bias</dt>
-    <dd>$m_0 = 0$ and $v_0 = 0$, so early EMA values are biased toward zero. Not the true average  -- just an artifact of starting from nothing.</dd>
+    <dd>$m_0 = 0$ and $v_0 = 0$, so early EMA values are biased toward zero. Not the true average ; just an artifact of starting from nothing.</dd>
 
     <dt>Bias correction factor $(1 - \beta^t)$</dt>
     <dd>Divide $m_t$ or $v_t$ by this to get the unbiased estimate. At $t=1$, this is small (big correction). As $t \to \infty$, this approaches 1 (no correction needed).</dd>
@@ -265,7 +265,7 @@
 </div>
 
 <a href="concept-12-full-adam.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 12  -- The Full Adam Algorithm</p>
+  <p>Next: Page 12 ; The Full Adam Algorithm</p>
   <p>All pieces assembled, every line explained, complete hand computation</p>
 </div></a>
 

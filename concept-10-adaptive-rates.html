@@ -46,7 +46,7 @@
 <div class="container">
 
 <h1>Page 10: Adaptive Learning Rates (Second Moment)</h1>
-<p class="subtitle">MATH 3850 -- Adam Paper, Section 2 -- Giving each parameter its own step size</p>
+<p class="subtitle">MATH 3850; Adam Paper, Section 2; Giving each parameter its own step size</p>
 
 <!-- ===================== PART A: THE IDEA ===================== -->
 <span class="tag">PART A</span>
@@ -54,7 +54,7 @@
 
 <div class="analogy">
   <p><strong>Analogy: A mixing board in a recording studio.</strong></p>
-  <p>A mixing board has a separate volume slider for each instrument. The drums are loud -- turn them down. The violin is quiet -- turn it up. You don't use ONE volume knob for all instruments, because they're at completely different levels.</p>
+  <p>A mixing board has a separate volume slider for each instrument. The drums are loud; turn them down. The violin is quiet; turn it up. You don't use ONE volume knob for all instruments, because they're at completely different levels.</p>
   <p style="margin-top: 12px;">Adam does this for parameters:</p>
   <ul style="margin: 8px 0 0 20px;">
     <li>Parameter with <strong>big gradients</strong> (loud drums) &rarr; <strong>smaller step</strong> (turn it down)</li>
@@ -89,15 +89,15 @@
   </div>
   <dl class="breakdown">
     <dt>$v_t$</dt>
-    <dd>Running average of squared gradients at step $t$ -- measures how large this parameter's gradient has been historically</dd>
+    <dd>Running average of squared gradients at step $t$; measures how large this parameter's gradient has been historically</dd>
     <dt>$v_{t-1}$</dt>
-    <dd>Previous step's squared-gradient average -- carries the long-term memory of gradient scale</dd>
+    <dd>Previous step's squared-gradient average; carries the long-term memory of gradient scale</dd>
     <dt>$g_t^2$</dt>
-    <dd>Current gradient squared (elementwise) -- removes sign and emphasizes large values</dd>
+    <dd>Current gradient squared (elementwise); removes sign and emphasizes large values</dd>
     <dt>$\beta_2$</dt>
     <dd>Decay rate (default 0.999). Very high, so $v_t$ has a long memory (~1000 steps). This captures the stable, long-term scale of each parameter's gradient</dd>
     <dt>$v_0 = 0$</dt>
-    <dd>Initialization -- same bias-toward-zero issue as $m_t$, fixed by the same bias correction on Page 11</dd>
+    <dd>Initialization; same bias-toward-zero issue as $m_t$, fixed by the same bias correction on Page 11</dd>
     <dt>$\hat{v}_t$</dt>
     <dd>Bias-corrected version: $v_t / (1 - \beta_2^t)$. Removes the initialization bias so early steps are accurate</dd>
     <dt>$\frac{\alpha}{\sqrt{\hat{v}_t} + \epsilon}$</dt>
@@ -112,9 +112,9 @@
   <p><strong>Squaring does two things:</strong></p>
   <ol style="margin: 8px 0 0 20px; font-size: 16px;">
     <li><strong>Makes everything positive.</strong> Gradients can be positive or negative. We want to know the <em>magnitude</em> (how big), not the sign. Squaring removes the sign. (Same reason we use $x^2$ instead of $x$ in "sum of squares" from statistics.)</li>
-    <li><strong>Emphasizes outliers.</strong> A gradient of 10 contributes $100$ when squared, while a gradient of 1 contributes just $1$. This makes $v_t$ more sensitive to large gradients, which is exactly what we want -- big gradients are the ones that need to be tamed.</li>
+    <li><strong>Emphasizes outliers.</strong> A gradient of 10 contributes $100$ when squared, while a gradient of 1 contributes just $1$. This makes $v_t$ more sensitive to large gradients, which is exactly what we want; big gradients are the ones that need to be tamed.</li>
   </ol>
-  <p style="margin-top: 12px; font-size: 16px;">The paper calls $v_t$ the <strong>"second raw moment estimate"</strong> because the second moment of a random variable is $\mathbb{E}[X^2]$ -- the expected value of the square. $v_t$ estimates $\mathbb{E}[g_t^2]$.</p>
+  <p style="margin-top: 12px; font-size: 16px;">The paper calls $v_t$ the <strong>"second raw moment estimate"</strong> because the second moment of a random variable is $\mathbb{E}[X^2]$; the expected value of the square. $v_t$ estimates $\mathbb{E}[g_t^2]$.</p>
 </div>
 
 <!-- ===================== PART C: HAND COMPUTATION ===================== -->
@@ -136,7 +136,7 @@
     <p>Corrected: $\hat{v}_1 = 0.1 / (1 - 0.999^1) = 0.1 / 0.001 = $ <span class="result">$100$</span></p>
     <p style="color:#888; font-size:15px;">Finally compute the effective step size: $\alpha$ divided by $\sqrt{\hat{v}_1}$.</p>
     <p>Effective $\alpha$: $0.001 / (\sqrt{100} + 10^{-8}) = 0.001 / 10 = $ <span class="result">$0.0001$</span></p>
-    <p style="color:#888; font-size:15px;">Step size shrunk from 0.001 to 0.0001 -- 10x smaller because the gradient is big!</p>
+    <p style="color:#888; font-size:15px;">Step size shrunk from 0.001 to 0.0001; 10x smaller because the gradient is big!</p>
   </div>
 
   <div class="step">
@@ -152,19 +152,19 @@
 
   <div class="step">
     <p class="step-label">$t = 1$: First step for Parameter 2 (tiny gradient)</p>
-    <p style="color:#888; font-size:15px;">Same formula, but now $g_1 = 0.1$, so $g_1^2 = 0.01$ -- a much smaller squared gradient.</p>
+    <p style="color:#888; font-size:15px;">Same formula, but now $g_1 = 0.1$, so $g_1^2 = 0.01$; a much smaller squared gradient.</p>
     <p>$v_1 = 0.999(0) + 0.001(0.1^2) = 0 + 0.001(0.01) = $ <span class="result">$0.00001$</span></p>
     <p style="color:#888; font-size:15px;">Bias-correct: same division by $(1 - 0.999^1) = 0.001$.</p>
     <p>Corrected: $\hat{v}_1 = 0.00001 / 0.001 = $ <span class="result">$0.01$</span></p>
     <p style="color:#888; font-size:15px;">Now $\sqrt{0.01} = 0.1$ is a tiny denominator, so the step size grows instead of shrinking.</p>
     <p>Effective $\alpha$: $0.001 / (\sqrt{0.01} + 10^{-8}) = 0.001 / 0.1 = $ <span class="result">$0.01$</span></p>
-    <p style="color:#888; font-size:15px;">Step size GREW from 0.001 to 0.01 -- 10x bigger because the gradient is small!</p>
+    <p style="color:#888; font-size:15px;">Step size GREW from 0.001 to 0.01; 10x bigger because the gradient is small!</p>
   </div>
 
   <div class="step">
-    <p class="step-label">Comparison at $t = 1$ -- the adaptive magic:</p>
-    <p>Parameter 1 effective $\alpha$: <span style="color:#ff6b6b; font-weight:bold;">0.0001</span> (small step -- big gradient tamed)</p>
-    <p>Parameter 2 effective $\alpha$: <span style="color:#64ffda; font-weight:bold;">0.01</span> (big step -- weak gradient boosted)</p>
+    <p class="step-label">Comparison at $t = 1$; the adaptive magic:</p>
+    <p>Parameter 1 effective $\alpha$: <span style="color:#ff6b6b; font-weight:bold;">0.0001</span> (small step; big gradient tamed)</p>
+    <p>Parameter 2 effective $\alpha$: <span style="color:#64ffda; font-weight:bold;">0.01</span> (big step; weak gradient boosted)</p>
     <p class="result">That's a 100x difference in step size! All automatic.</p>
   </div>
 
@@ -186,14 +186,14 @@
 <!-- ===================== PART E: CONNECTION ===================== -->
 <div class="why-box">
   <h3>Connection to your course: this IS diagonal preconditioning</h3>
-  <p>In Page 04, Newton's method used $[\nabla^2 f]^{-1}$ (inverse Hessian) to scale each direction by its curvature. But the Hessian is an $n \times n$ matrix -- expensive.</p>
+  <p>In Page 04, Newton's method used $[\nabla^2 f]^{-1}$ (inverse Hessian) to scale each direction by its curvature. But the Hessian is an $n \times n$ matrix; expensive.</p>
   <p style="margin-top: 8px;">Adam approximates a <strong>diagonal</strong> version: instead of a full matrix, just one number per parameter ($v_t$ for each $\theta_i$). Storage: $n$ numbers instead of $n^2$. For MNIST with $n = 7850$: Adam stores 7,850 numbers; Newton would need 61,622,500.</p>
   <p style="margin-top: 8px; color: #ffd93d;">The paper says (Section 5): "Adam employs a preconditioner... $\hat{v}_t$ is an approximation to the diagonal of the Fisher information matrix." You don't need to fully understand that — just know that Adam's $v_t$ serves the same purpose as Newton's Hessian, but much cheaper.</p>
 </div>
 
 <!-- ===================== GLOSSARY ===================== -->
 <div class="glossary">
-  <h3>Glossary -- Adaptive Rates</h3>
+  <h3>Glossary; Adaptive Rates</h3>
   <dl>
     <dt>Second moment ($v_t$)</dt>
     <dd>EMA of squared gradients. Estimates $\mathbb{E}[g^2]$ — the average squared magnitude of each parameter's gradient. Used to scale the step size.</dd>
@@ -216,7 +216,7 @@
 </div>
 
 <a href="concept-11-bias-correction.html" style="text-decoration:none;"><div class="nav" style="cursor:pointer;">
-  <p>Next: Page 11 -- Bias Correction</p>
+  <p>Next: Page 11; Bias Correction</p>
   <p>Why the first few steps are wrong, and a simple division that fixes everything</p>
 </div></a>
 
